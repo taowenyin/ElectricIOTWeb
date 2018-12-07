@@ -1,0 +1,22 @@
+<div class="full-screen page-content">
+  <div class="wrapper">
+    <img class="logo-img" src="./assets/img/logo.png" alt="">
+    <div class="text-wrapper">
+      <h1 class="title-text">Logo Text</h1>
+    </div>
+    <form>
+      <div>
+        <label for="login_name">用户名</label>
+        <input type="text" id="login_name" name="login_name" [(ngModel)]="loginName">
+      </div>
+      <div>
+        <label for="login_password">密码</label>
+        <input type="password" id="login_password" name="login_password" [(ngModel)]="loginPassword">
+      </div>
+      <button (click)="login()">登录</button>
+    </form>
+    <div class="copy-right">
+      Copyright © 2018 XXXX
+    </div>
+  </div>
+</div>
