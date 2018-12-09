@@ -1,30 +1,24 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {API_LOGIN} from './http-url.namespace';
-import {Observable} from 'rxjs/index';
+import {Observable} from 'rxjs';
+import {ReponseEntity} from '../entity/reponse.entity';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/x-www-form-urlencoded'
-    })
-  };
-
   constructor(
     private http: HttpClient
   ) { }
 
-  public login(loginName: string, loginPassword: string): Observable<any> {
+  public login(loginName: string, loginPassword: string): Observable<ReponseEntity> {
+    // 创建表单式的数据
+    const loginBody: FormData = new FormData();
+    loginBody.append('login_name', loginName);
+    loginBody.append('login_password', loginPassword);
 
-    const loginBody = {
-      'login_name': loginName,
-      'login_password': loginPassword
-    };
-
-    return this.http.post(API_LOGIN, loginBody, this.httpOptions);
+    return this.http.post<ReponseEntity>(API_LOGIN, loginBody);
   }
 }

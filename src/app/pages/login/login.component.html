@@ -2,20 +2,40 @@
   <div class="wrapper">
     <img class="logo-img" src="./assets/img/logo.png" alt="">
     <div class="text-wrapper">
-      <h1 class="title-text">Logo Text</h1>
+      <h1 class="title-text">华电IOT平台</h1>
     </div>
-    <form>
-      <div>
-        <label for="login_name">用户名</label>
-        <input type="text" id="login_name" name="login_name" [(ngModel)]="loginName">
-      </div>
-      <div>
-        <label for="login_password">密码</label>
-        <input type="password" id="login_password" name="login_password" [(ngModel)]="loginPassword">
-      </div>
-      <button (click)="login()">登录</button>
+    <form nz-form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group [nzPrefix]="prefixUser">
+            <input type="text" nz-input formControlName="loginName" placeholder="用户名">
+          </nz-input-group>
+          <nz-form-explain *ngIf="loginForm.get('loginName').dirty && loginForm.get('loginName').errors">请输入登录用户名</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group [nzPrefix]="prefixPassword">
+            <input type="password" nz-input formControlName="loginPassword" placeholder="密码">
+          </nz-input-group>
+          <nz-form-explain *ngIf="loginForm.get('loginPassword').dirty && loginForm.get('loginPassword').errors">请输入登录密码</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <label nz-checkbox formControlName="remember">
+            <span>记住密码</span>
+          </label>
+          <a class="login-form-forgot">忘记密码</a>
+          <button type="submit" nz-button nzType="primary" class="login-form-button"  >登录</button>
+          <nz-form-explain *ngIf="loginError" class="danger">用户名或密码错误</nz-form-explain>
+          <a href="">现在注册</a>
+        </nz-form-control>
+      </nz-form-item>
     </form>
-    <div class="copy-right">
+    <ng-template #prefixUser><i nz-icon type="user"></i></ng-template>
+    <ng-template #prefixPassword><i nz-icon type="lock"></i></ng-template>
+    <div>
       Copyright © 2018 XXXX
     </div>
   </div>
