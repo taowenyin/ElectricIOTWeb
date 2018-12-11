@@ -1,3 +1,47 @@
-<p>
-  main works!
-</p>
+<nz-layout>
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzWidth]="menuWidth" [nzReverseArrow]="isReverseArrow">
+    <div class="logo">
+
+    </div>
+    <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu>
+        <span title><i nz-icon type="home" theme="outline"></i><span class="menu-text">运营中心</span></span>
+        <ul>
+          <li nz-menu-item><i nz-icon type="global" theme="outline"></i><span class="menu-item-text">地图监控</span></li>
+        </ul>
+      </li>
+      <li nz-submenu>
+        <span title><i nz-icon type="appstore" theme="outline"></i><span class="menu-text">设备中心</span></span>
+        <ul>
+          <li nz-menu-item><i nz-icon type="database" theme="outline"></i><span class="menu-item-text">设备管理</span></li>
+        </ul>
+      </li>
+      <li nz-submenu>
+        <span title><i nz-icon type="block" theme="outline"></i><span class="menu-text">管理中心</span></span>
+        <ul>
+          <li nz-menu-item><i nz-icon type="cluster" theme="outline"></i><span class="menu-item-text">组织</span></li>
+          <li nz-menu-item><i nz-icon type="audit" theme="outline"></i><span class="menu-item-text">角色</span></li>
+          <li nz-menu-item><i nz-icon type="usergroup-delete" theme="outline"></i><span class="menu-item-text">用户</span></li>
+          <li nz-menu-item><i nz-icon type="setting" theme="outline"></i><span class="menu-item-text">设置</span></li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+
+    </nz-header>
+    <nz-content>
+      <nz-breadcrumb>
+        <nz-breadcrumb-item>运营中心</nz-breadcrumb-item>
+        <nz-breadcrumb-item>地图监控</nz-breadcrumb-item>
+      </nz-breadcrumb>
+      <div class="main-content">
+        主页内容
+      </div>
+    </nz-content>
+    <nz-footer>
+      Copyright © 2018 苏州工业园区服务外包职业学院
+    </nz-footer>
+  </nz-layout>
+</nz-layout>
