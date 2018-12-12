@@ -22,6 +22,7 @@ nz-header {
 }
 
 nz-content {
+  position: relative;
   margin: 0 16px;
 
   nz-breadcrumb {
@@ -29,9 +30,14 @@ nz-content {
   }
 
   .main-content {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     padding: 24px;
     background: #FFF;
-    height: 360px;
+    overflow: auto;
   }
 
 }
