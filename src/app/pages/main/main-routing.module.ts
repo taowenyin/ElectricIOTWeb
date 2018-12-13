@@ -12,15 +12,16 @@ const routes: Routes = [
   {
     path: 'main',
     component: MainComponent,
+    data: {breadcrumb: '主页'},
     children: [
-      {path: 'map', component: MapMonitorComponent},
-      {path: 'device', component: DeviceManageComponent},
-      {path: 'department', component: DepartmentComponent},
-      {path: 'role', component: RoleComponent},
-      {path: 'user', component: UserComponent},
-      {path: 'setting', component: SettingComponent}
+      {path: 'map', component: MapMonitorComponent, data: {breadcrumb: '地图监控'}},
+      {path: 'device', component: DeviceManageComponent, data: {breadcrumb: '设备管理'}},
+      {path: 'department', component: DepartmentComponent, data: {breadcrumb: '组织'}},
+      {path: 'role', component: RoleComponent, data: {breadcrumb: '角色'}},
+      {path: 'user', component: UserComponent, data: {breadcrumb: '用户'}},
+      {path: 'setting', component: SettingComponent, data: {breadcrumb: '设置'}}
     ]
-  },
+  }
 ];
 
 @NgModule({
