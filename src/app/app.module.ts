@@ -20,13 +20,13 @@ registerLocaleData(zh);
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
     LoginModule,
     MainModule,
     BrowserAnimationsModule,
     FormsModule,
-    NgZorroAntdModule
+    NgZorroAntdModule,
+    AppRoutingModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent]
