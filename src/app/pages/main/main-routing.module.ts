@@ -14,18 +14,19 @@ const routes: Routes = [
     component: MainComponent,
     data: {breadcrumb: '主页'},
     children: [
+      {path: '', redirectTo: 'map', pathMatch: 'full'},
       {path: 'map', component: MapMonitorComponent, data: {breadcrumb: '地图监控'}},
       {path: 'device', component: DeviceManageComponent, data: {breadcrumb: '设备管理'}},
       {path: 'department', component: DepartmentComponent, data: {breadcrumb: '组织'}},
       {path: 'role', component: RoleComponent, data: {breadcrumb: '角色'}},
       {path: 'user', component: UserComponent, data: {breadcrumb: '用户'}},
-      {path: 'setting', component: SettingComponent, data: {breadcrumb: '设置'}}
+      {path: 'setting', component: SettingComponent, data: {breadcrumb: '设置'}},
     ]
-  }
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {enableTracing: false})],
+  imports: [RouterModule.forRoot(routes, {enableTracing: true})],
   exports: [RouterModule]
 })
 export class MainRoutingModule { }

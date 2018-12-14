@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
       data => {
         // 登录成功就进行跳转
         if (data.code === 0) {
-          this.router.navigateByUrl('/main/map');
+          this.router.navigateByUrl('/main');
         } else {
           this.loginError = true;
           console.log(data);
