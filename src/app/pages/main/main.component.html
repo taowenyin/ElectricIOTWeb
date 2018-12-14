@@ -4,25 +4,25 @@
 
     </div>
     <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu>
+      <li nz-submenu [nzOpen]="true">
         <span title><i nz-icon type="home" theme="outline"></i><span class="menu-text">运营中心</span></span>
         <ul>
-          <li routerLink="/main/map" nz-menu-item><i nz-icon type="global" theme="outline"></i><span class="menu-item-text">地图监控</span></li>
+          <li routerLink="map" nz-menu-item [nzSelected]="true"><i nz-icon type="global" theme="outline"></i><span class="menu-item-text">地图监控</span></li>
         </ul>
       </li>
       <li nz-submenu>
         <span title><i nz-icon type="appstore" theme="outline"></i><span class="menu-text">设备中心</span></span>
         <ul>
-          <li routerLink="/main/device" nz-menu-item><i nz-icon type="database" theme="outline"></i><span class="menu-item-text">设备管理</span></li>
+          <li routerLink="device" nz-menu-item><i nz-icon type="database" theme="outline"></i><span class="menu-item-text">设备管理</span></li>
         </ul>
       </li>
       <li nz-submenu>
         <span title><i nz-icon type="block" theme="outline"></i><span class="menu-text">管理中心</span></span>
         <ul>
-          <li routerLink="/main/department" nz-menu-item><i nz-icon type="cluster" theme="outline"></i><span class="menu-item-text">组织</span></li>
-          <li routerLink="/main/role" nz-menu-item><i nz-icon type="audit" theme="outline"></i><span class="menu-item-text">角色</span></li>
-          <li routerLink="/main/user" nz-menu-item><i nz-icon type="usergroup-delete" theme="outline"></i><span class="menu-item-text">用户</span></li>
-          <li routerLink="/main/setting" nz-menu-item><i nz-icon type="setting" theme="outline"></i><span class="menu-item-text">设置</span></li>
+          <li routerLink="department" nz-menu-item><i nz-icon type="cluster" theme="outline"></i><span class="menu-item-text">组织</span></li>
+          <li routerLink="role" nz-menu-item><i nz-icon type="audit" theme="outline"></i><span class="menu-item-text">角色</span></li>
+          <li routerLink="user" nz-menu-item><i nz-icon type="usergroup-delete" theme="outline"></i><span class="menu-item-text">用户</span></li>
+          <li routerLink="setting" nz-menu-item><i nz-icon type="setting" theme="outline"></i><span class="menu-item-text">设置</span></li>
         </ul>
       </li>
     </ul>
@@ -32,8 +32,7 @@
 
     </nz-header>
     <nz-content>
-      <nz-breadcrumb [nzAutoGenerate]="true">
-      </nz-breadcrumb>
+      <nz-breadcrumb [nzAutoGenerate]="true"></nz-breadcrumb>
       <div class="main-content">
         <router-outlet></router-outlet>
       </div>
