@@ -1,3 +1,44 @@
-<p>
-  device-manage works!
-</p>
+<div>
+  <div class="table-operations">
+    <button nz-button nzType="primary" nzShape="circle" (click)="updateRawData()"><i nz-icon type="cloud-download" theme="outline"></i></button>
+  </div>
+  <nz-table
+    #deviceTable
+    [nzData]="dataSet"
+    (nzCurrentPageDataChange)="currentPageDataChange($event)"
+    (nzPageIndexChange)="refreshStatus()"
+    (nzPageSizeChange)="refreshStatus()">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+      <tr>
+        <th nzShowCheckbox [(nzChecked)]='isAllChecked' [nzIndeterminate]='isIndeterminate' (nzCheckedChange)="checkAll($event)"></th>
+        <th nzShowSort nzSortKey="uid" nzShowFilter [nzFilters]='uidList' (nzFilterChange)="filter($event, imsiList, nameList, serialNumberList, typeList, statusList, userList, departmentList)">UID</th>
+        <th nzShowSort nzSortKey="imsi" nzShowFilter [nzFilters]='imsiList' (nzFilterChange)="filter(uidList, $event, nameList, serialNumberList, typeList, statusList, userList, departmentList)">IMSI</th>
+        <th nzShowSort nzSortKey="name" nzShowFilter [nzFilters]='nameList' (nzFilterChange)="filter(uidList, imsiList, $event, serialNumberList, typeList, statusList, userList, departmentList)">名称</th>
+        <th nzShowSort nzSortKey="serial_number" nzShowFilter [nzFilters]='serialNumberList' (nzFilterChange)="filter(uidList, imsiList, nameList, $event, typeList, statusList, userList, departmentList)">序列号</th>
+        <th nzShowSort nzSortKey="type" nzShowFilter [nzFilters]='typeList' (nzFilterChange)="filter(uidList, imsiList, nameList, serialNumberList, $event, statusList, userList, departmentList)">类型</th>
+        <th nzShowSort nzSortKey="status" nzShowFilter [nzFilters]='statusList' (nzFilterChange)="filter(uidList, imsiList, nameList, serialNumberList, typeList, $event, userList, departmentList)">状态</th>
+        <th nzShowSort nzSortKey="user" nzShowFilter [nzFilters]='userList' (nzFilterChange)="filter(uidList, imsiList, nameList, serialNumberList, typeList, statusList, $event, departmentList)">保管员</th>
+        <th nzShowSort nzSortKey="department" nzShowFilter [nzFilters]='departmentList' (nzFilterChange)="filter(uidList, imsiList, nameList, serialNumberList, typeList, statusList, userList, $event)">所属部门</th>
+        <th nzShowSort nzSortKey="keep_live_interval">心跳间隔（秒）</th>
+        <th nzShowSort nzSortKey="battery_sleep_time">休眠时间（分钟）</th>
+        <th nzShowSort nzSortKey="battery_keep_live_time">保持连接（秒）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of deviceTable.data">
+        <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus()"></td>
+        <td>{{data.uid}}</td>
+        <td>{{data.imsi}}</td>
+        <td>{{data.name}}</td>
+        <td>{{data.serial_number}}</td>
+        <td>{{data.type}}</td>
+        <td>{{data.status}}</td>
+        <td>{{data.user}}</td>
+        <td>{{data.department}}</td>
+        <td>{{data.keep_live_interval}}</td>
+        <td>{{data.battery_sleep_time}}</td>
+        <td>{{data.battery_keep_live_time}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
