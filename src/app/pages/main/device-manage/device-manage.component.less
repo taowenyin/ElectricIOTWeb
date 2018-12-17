@@ -1,7 +1,34 @@
 .table-operations {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   margin-bottom: 16px;
+
+  .flex-left {
+
+  }
+
+  .flex-mach-parent {
+    flex-grow: 1;
+  }
+
+  .flex-right {
+
+  }
+
 }
 
-.table-operations > button {
-  margin-right: 8px;
+nz-table {
+  // 把最后一个单元格内容设为居中
+  tr > th:last-child, tr > td:last-child {
+    text-align: center;
+  }
 }
+
+
+
+//.table-operations > button {
+//  margin-right: 8px;
+//}
+

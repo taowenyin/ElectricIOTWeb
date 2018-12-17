@@ -137,10 +137,10 @@ export class DeviceManageComponent implements OnInit {
   // Department筛选列表
   public listOfSearchDepartment = [];
 
-  // 更新原始数据
-  public updateRawData(): void {
-    console.log('===updateRawData===');
-  }
+  // 设备详细信息对话框显示状态位
+  public isVisible = false;
+  // 设备详细信息是否载入完成
+  public isOkLoading = false;
 
   constructor(
     private deviceService: DeviceService
@@ -148,8 +148,6 @@ export class DeviceManageComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('===ngOnInit===');
-
     this.deviceService.getAllDevices().subscribe(
       data => {
         if (data.code === 0) {
@@ -169,15 +167,6 @@ export class DeviceManageComponent implements OnInit {
 
           // 筛选数据时需重置数据集
           this.dataSet = this.rawData.slice(0, this.rawData.length);
-          console.log(this.dataSet);
-          console.log(this.uidList);
-          console.log(this.imsiList);
-          console.log(this.nameList);
-          console.log(this.serialNumberList);
-          console.log(this.statusList);
-          console.log(this.typeList);
-          console.log(this.userList);
-          console.log(this.departmentList);
         }
       },
       error => {
@@ -191,6 +180,7 @@ export class DeviceManageComponent implements OnInit {
 
   // 获取当前页面的数据
   public currentPageDataChange($event: Array<{
+    id: number;
     uid: string;
     imsi: string;
     name: string;
@@ -199,14 +189,14 @@ export class DeviceManageComponent implements OnInit {
     status: string;
     user: string;
     department: string;
+    comment: string;
+    create_time: string;
     keep_live_interval: number;
     battery_sleep_time: number;
     battery_keep_live_time: number;
     checked: boolean;
     disable: boolean}>): void {
     this.displayData = $event;
-
-    console.log('===currentPageDataChange===');
   }
 
   // 刷新当前页面的数据集状态
@@ -294,6 +284,29 @@ export class DeviceManageComponent implements OnInit {
 
     // 由于两个数组的地址不同，因此不能直接拷贝
     this.dataSet = data.slice(0, data.length);
+  }
+
+  // 更新原始数据
+  public updateRawData(): void {
+    console.log('===updateRawData===');
+  }
+
+  // 显示详细信息对话框
+  public showInfoModalDialog(index: number): void {
+    console.log('showInfoModalDialog ID = ' + index);
+    this.isVisible = true;
+  }
+
+  public handleOk(): void {
+    this.isOkLoading = true;
+    window.setTimeout(() => {
+      this.isVisible = false;
+      this.isOkLoading = false;
+    }, 3000);
+  }
+
+  public handleCancel(): void {
+    this.isVisible = false;
   }
 
 }
