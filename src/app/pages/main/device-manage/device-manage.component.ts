@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DeviceService} from '../../../core/device.service';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-device-manage',
@@ -142,40 +143,45 @@ export class DeviceManageComponent implements OnInit {
   // 设备详细信息是否载入完成
   public isOkLoading = false;
 
+  public deviceInfoForm: FormGroup;
+
+  // 是否载入类型数据中
+  public isTypeLoading = false;
+  // 是否载入状态数据中
+  public isStatusLoading = false;
+  // 设备类型列表
+  public deviceTypeList = [];
+  // 设备状态列表
+  public deviceStatusList = [];
+  // 设备心跳间隔，默认60秒
+  public keepLiveIntervalDefault = 60;
+  public createTimeDefault = '2018-12-18';
+  // 电源供电时的休眠时间，默认180分钟
+  public batterySleepTimeDefault = 180;
+
   constructor(
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private formBuilder: FormBuilder
   ) {
   }
 
   ngOnInit() {
-    this.deviceService.getAllDevices().subscribe(
-      data => {
-        if (data.code === 0) {
-          const netData = Object.values(data.data);
-          for (const device of netData) {
-            this.rawData.push(device);
+    this.deviceInfoForm = this.formBuilder.group({
+      uid: [null, [Validators.required]],
+      imsi: [null, [Validators.required]],
+      name: [null, [Validators.required]],
+      serialName: [null, [Validators.required]],
+      deviceType: [null, [Validators.required]],
+      deviceStatus: [null, [Validators.required]],
+      comment: [null],
+      createTime: [null],
+      keepLiveInterval: [null],
+      batterySleepTime: [null],
+    });
 
-            this.uidList.push({text: device.uid, value: device.uid, byDefault: false});
-            this.imsiList.push({text: device.imsi, value: device.imsi, byDefault: false});
-            this.nameList.push({text: device.name, value: device.name, byDefault: false});
-            this.serialNumberList.push({text: device.serial_number, value: device.serial_number, byDefault: false});
-            this.statusList.push({text: device.status, value: device.status, byDefault: false});
-            this.typeList.push({text: device.type, value: device.type, byDefault: false});
-            this.userList.push({text: device.user, value: device.user, byDefault: false});
-            this.departmentList.push({text: device.department, value: device.department, byDefault: false});
-          }
-
-          // 筛选数据时需重置数据集
-          this.dataSet = this.rawData.slice(0, this.rawData.length);
-        }
-      },
-      error => {
-        console.log(error);
-      },
-      () => {
-        console.log('Get All Devices Complete');
-      }
-    );
+    this.loadAllDevices();
+    this.loadDeviceTypesMore();
+    this.loadDeviceStatusMore();
   }
 
   // 获取当前页面的数据
@@ -307,6 +313,78 @@ export class DeviceManageComponent implements OnInit {
 
   public handleCancel(): void {
     this.isVisible = false;
+  }
+
+  // 载入更多的设备类型
+  public loadDeviceTypesMore(): void {
+    this.isTypeLoading = true;
+    this.deviceService.getAllDeviceTypes().subscribe(
+      data => {
+        if (data.code === 0) {
+          const typesData = Object.values(data.data);
+          this.isTypeLoading = false;
+          this.deviceTypeList = typesData.slice(0, typesData.length);
+        }
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        console.log('Get All Device Types Complete');
+      }
+    );
+  }
+
+  // 载入更多的设备状态
+  public loadDeviceStatusMore(): void {
+    this.isStatusLoading = true;
+    this.deviceService.getAllDeviceStatus().subscribe(
+      data => {
+        if (data.code === 0) {
+          const statusData = Object.values(data.data);
+          this.isStatusLoading = false;
+          this.deviceStatusList = statusData.slice(0, statusData.length);
+        }
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        console.log('Get All Device Status Complete');
+      }
+    );
+  }
+
+  // 载入所有的设备类型
+  public loadAllDevices(): void {
+    this.deviceService.getAllDevices().subscribe(
+      data => {
+        if (data.code === 0) {
+          const netData = Object.values(data.data);
+          for (const device of netData) {
+            this.rawData.push(device);
+
+            this.uidList.push({text: device.uid, value: device.uid, byDefault: false});
+            this.imsiList.push({text: device.imsi, value: device.imsi, byDefault: false});
+            this.nameList.push({text: device.name, value: device.name, byDefault: false});
+            this.serialNumberList.push({text: device.serial_number, value: device.serial_number, byDefault: false});
+            this.statusList.push({text: device.status, value: device.status, byDefault: false});
+            this.typeList.push({text: device.type, value: device.type, byDefault: false});
+            this.userList.push({text: device.user, value: device.user, byDefault: false});
+            this.departmentList.push({text: device.department, value: device.department, byDefault: false});
+          }
+
+          // 筛选数据时需重置数据集
+          this.dataSet = this.rawData.slice(0, this.rawData.length);
+        }
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        console.log('Get All Devices Complete');
+      }
+    );
   }
 
 }

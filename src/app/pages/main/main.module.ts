@@ -9,6 +9,7 @@ import { DepartmentComponent } from './department/department.component';
 import { RoleComponent } from './role/role.component';
 import { UserComponent } from './user/user.component';
 import { SettingComponent } from './setting/setting.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations:
@@ -23,6 +24,8 @@ import { SettingComponent } from './setting/setting.component';
     ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     NgZorroAntdModule,
     MainRoutingModule
   ]
