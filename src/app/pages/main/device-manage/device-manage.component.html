@@ -118,6 +118,10 @@
       <nz-form-control [nzSpan]="8">
         <nz-input-number formControlName="batterySleepTime" [(ngModel)]="batterySleepTimeDefault" [nzMin]="1" [nzMax]="200" [nzStep]="1" [nzPlaceHolder]="'电源供电的休眠时间'"></nz-input-number>
       </nz-form-control>
+      <nz-form-label [nzSpan]="4" nzRequired nzFor="batteryKeepLiveTime">连接</nz-form-label>
+      <nz-form-control [nzSpan]="8">
+        <nz-input-number formControlName="batteryKeepLiveTime" [(ngModel)]="batteryKeepLiveTimeDefault" [nzMin]="1" [nzMax]="400" [nzStep]="1" [nzPlaceHolder]="'保持连接的时间'"></nz-input-number>
+      </nz-form-control>
     </nz-form-item>
   </form>
 </nz-modal>

@@ -158,6 +158,8 @@ export class DeviceManageComponent implements OnInit {
   public createTimeDefault = '2018-12-18';
   // 电源供电时的休眠时间，默认180分钟
   public batterySleepTimeDefault = 180;
+  // 电池供电时心跳包发送后保持连接的时间，默认300秒
+  public batteryKeepLiveTimeDefault = 300;
 
   constructor(
     private deviceService: DeviceService,
@@ -177,6 +179,7 @@ export class DeviceManageComponent implements OnInit {
       createTime: [null],
       keepLiveInterval: [null],
       batterySleepTime: [null],
+      batteryKeepLiveTime: [null],
     });
 
     this.loadAllDevices();
