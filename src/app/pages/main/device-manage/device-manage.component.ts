@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DeviceService} from '../../../core/device.service';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DeviceEntity} from '../../../entity/device.entity';
 
 @Component({
   selector: 'app-device-manage',
@@ -10,7 +11,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 export class DeviceManageComponent implements OnInit {
 
   // 网络获取的原始数据
-  public rawData = [
+  public rawData: DeviceEntity[] = [
     {
       id  : 1,
       uid : 'MS-01',
@@ -23,9 +24,9 @@ export class DeviceManageComponent implements OnInit {
       department  : '研发部门1',
       comment  : '测试说明1',
       create_time  : '2018-11-20 21:10:30',
-      keep_live_interval  : '60',
-      battery_sleep_time  : '80',
-      battery_keep_live_time  : '100',
+      keep_live_interval  : 60,
+      battery_sleep_time  : 60,
+      battery_keep_live_time  : 60,
       checked  : false,
       disable  : false,
     },
@@ -41,9 +42,9 @@ export class DeviceManageComponent implements OnInit {
       department  : '研发部门2',
       comment  : '测试说明2',
       create_time  : '2018-11-20 22:10:30',
-      keep_live_interval  : '50',
-      battery_sleep_time  : '70',
-      battery_keep_live_time  : '90',
+      keep_live_interval  : 50,
+      battery_sleep_time  : 70,
+      battery_keep_live_time  : 90,
       checked  : false,
       disable  : false,
     },
@@ -113,9 +114,9 @@ export class DeviceManageComponent implements OnInit {
   // 是否设为不确定状态
   public isIndeterminate = false;
   // 数据集
-  public dataSet = Object.assign([], this.rawData);
+  public dataSet: DeviceEntity[] = Object.assign([], this.rawData);
   // 表格中显示的数据
-  public displayData = [];
+  public displayData: DeviceEntity[] = [];
 
   // 需要进行排序的标签名
   public sortName = null;
@@ -139,10 +140,13 @@ export class DeviceManageComponent implements OnInit {
   public listOfSearchDepartment = [];
 
   // 设备详细信息对话框显示状态位
-  public isVisible = false;
+  public isDeviceInfoDialogVisible = false;
+  // 设备详细信息对话框显示为只读状态
+  public isDeviceInfoDialogRead = false;
   // 设备详细信息是否载入完成
   public isOkLoading = false;
 
+  // 设备信息表单
   public deviceInfoForm: FormGroup;
 
   // 是否载入类型数据中
@@ -153,13 +157,9 @@ export class DeviceManageComponent implements OnInit {
   public deviceTypeList = [];
   // 设备状态列表
   public deviceStatusList = [];
-  // 设备心跳间隔，默认60秒
-  public keepLiveIntervalDefault = 60;
-  public createTimeDefault = '2018-12-18';
-  // 电源供电时的休眠时间，默认180分钟
-  public batterySleepTimeDefault = 180;
-  // 电池供电时心跳包发送后保持连接的时间，默认300秒
-  public batteryKeepLiveTimeDefault = 300;
+
+  // 当前选中设备的数据
+  public currentSelectDeviceData: DeviceEntity = new DeviceEntity();
 
   constructor(
     private deviceService: DeviceService,
@@ -169,13 +169,13 @@ export class DeviceManageComponent implements OnInit {
 
   ngOnInit() {
     this.deviceInfoForm = this.formBuilder.group({
-      uid: [null, [Validators.required]],
-      imsi: [null, [Validators.required]],
-      name: [null, [Validators.required]],
-      serialName: [null, [Validators.required]],
+      uid: [{value: null, disabled: this.isDeviceInfoDialogRead}, [Validators.required]],
+      imsi: [{value: null, disabled: this.isDeviceInfoDialogRead}, [Validators.required]],
+      name: [{value: null, disabled: this.isDeviceInfoDialogRead}, [Validators.required]],
+      serialName: [{value: null, disabled: this.isDeviceInfoDialogRead}, [Validators.required]],
       deviceType: [null, [Validators.required]],
       deviceStatus: [null, [Validators.required]],
-      comment: [null],
+      comment: [{value: null, disabled: this.isDeviceInfoDialogRead}],
       createTime: [null],
       keepLiveInterval: [null],
       batterySleepTime: [null],
@@ -303,19 +303,27 @@ export class DeviceManageComponent implements OnInit {
   // 显示详细信息对话框
   public showInfoModalDialog(index: number): void {
     console.log('showInfoModalDialog ID = ' + index);
-    this.isVisible = true;
+    this.currentSelectDeviceData = this.dataSet[index];
+    this.isDeviceInfoDialogVisible = true;
+    this.isDeviceInfoDialogRead = true;
+
+    this.deviceInfoForm.get('uid').disable();
+    this.deviceInfoForm.get('imsi').disable();
+    this.deviceInfoForm.get('name').disable();
+    this.deviceInfoForm.get('serialName').disable();
+    this.deviceInfoForm.get('comment').disable();
   }
 
   public handleOk(): void {
     this.isOkLoading = true;
     window.setTimeout(() => {
-      this.isVisible = false;
+      this.isDeviceInfoDialogVisible = false;
       this.isOkLoading = false;
     }, 3000);
   }
 
   public handleCancel(): void {
-    this.isVisible = false;
+    this.isDeviceInfoDialogVisible = false;
   }
 
   // 载入更多的设备类型
@@ -365,6 +373,8 @@ export class DeviceManageComponent implements OnInit {
         if (data.code === 0) {
           const netData = Object.values(data.data);
           for (const device of netData) {
+            device['checked'] = false;
+            device['disable'] = false;
             this.rawData.push(device);
 
             this.uidList.push({text: device.uid, value: device.uid, byDefault: false});

@@ -41,46 +41,46 @@
         <td>{{data.status}}</td>
         <td>{{data.user}}</td>
         <td>{{data.department}}</td>
-        <td><button nz-button nzType="primary" (click)="showInfoModalDialog(i)"><span>修改</span></button></td>
+        <td><button nz-button nzType="primary" (click)="showInfoModalDialog(i)"><span>详情</span></button></td>
       </tr>
     </tbody>
   </nz-table>
 </div>
 
-<nz-modal [(nzVisible)]="isVisible" nzTitle="设备信息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+<nz-modal [(nzVisible)]="isDeviceInfoDialogVisible" nzTitle="设备信息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
   <form nz-form [formGroup]="deviceInfoForm">
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="uid">UID</nz-form-label>
       <nz-form-control [nzSpan]="20">
-        <input nz-input formControlName="uid" id="uid" placeholder="填入产品UID">
+        <input nz-input formControlName="uid" id="uid" placeholder="填入产品UID" [(ngModel)]="currentSelectDeviceData.uid">
         <nz-form-explain *ngIf="deviceInfoForm.get('uid').dirty && deviceInfoForm.get('uid').errors">UID不能为空</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="imsi">IMSI</nz-form-label>
       <nz-form-control [nzSpan]="20">
-        <input nz-input formControlName="imsi" id="imsi" placeholder="填入产品的IMSI号">
+        <input nz-input formControlName="imsi" id="imsi" placeholder="填入产品的IMSI号" [(ngModel)]="currentSelectDeviceData.imsi">
         <nz-form-explain *ngIf="deviceInfoForm.get('imsi').dirty && deviceInfoForm.get('imsi').errors">IMSI不能为空</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="name">设备名称</nz-form-label>
       <nz-form-control [nzSpan]="20">
-        <input nz-input formControlName="name" id="name" placeholder="填入产品名称">
+        <input nz-input formControlName="name" id="name" placeholder="填入产品名称" [(ngModel)]="currentSelectDeviceData.name">
         <nz-form-explain *ngIf="deviceInfoForm.get('name').dirty && deviceInfoForm.get('name').errors">设备名称不能为空</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="serialName">序列号</nz-form-label>
       <nz-form-control [nzSpan]="20">
-        <input nz-input formControlName="serialName" id="serialName" placeholder="填入产品序列号">
+        <input nz-input formControlName="serialName" id="serialName" placeholder="填入产品序列号" [(ngModel)]="currentSelectDeviceData.serial_number">
         <nz-form-explain *ngIf="deviceInfoForm.get('serialName').dirty && deviceInfoForm.get('serialName').errors">设备序列号不能为空</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="deviceType">类型</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-select formControlName="deviceType" name="deviceType" id="deviceType" (nzScrollToBottom)="loadDeviceTypesMore()" nzPlaceHolder="选择设备类型" nzAllowClear>
+        <nz-select formControlName="deviceType" [(ngModel)]="currentSelectDeviceData.type" name="deviceType" id="deviceType" (nzScrollToBottom)="loadDeviceTypesMore()" nzPlaceHolder="选择设备类型" nzAllowClear [nzDisabled]="isDeviceInfoDialogRead">
           <nz-option *ngFor="let typeItem of deviceTypeList" [nzValue]="typeItem.name" [nzLabel]="typeItem.name"></nz-option>
           <nz-option *ngIf="isTypeLoading" nzDisabled nzCustomContent>
             <i nz-icon type="loading" theme="outline"></i> 载入数据中...
@@ -89,7 +89,7 @@
       </nz-form-control>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="deviceStatus">状态</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-select formControlName="deviceStatus" name="deviceStatus" id="deviceStatus" (nzScrollToBottom)="loadDeviceStatusMore()" nzPlaceHolder="选择设备状态" nzAllowClear>
+        <nz-select formControlName="deviceStatus" [(ngModel)]="currentSelectDeviceData.status" name="deviceStatus" id="deviceStatus" (nzScrollToBottom)="loadDeviceStatusMore()" nzPlaceHolder="选择设备状态" nzAllowClear [nzDisabled]="isDeviceInfoDialogRead">
           <nz-option *ngFor="let statusItem of deviceStatusList" [nzValue]="statusItem.name" [nzLabel]="statusItem.name"></nz-option>
           <nz-option *ngIf="isStatusLoading" nzDisabled nzCustomContent>
             <i nz-icon type="loading" theme="outline"></i> 载入数据中...
@@ -100,27 +100,27 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzFor="comment">备注</nz-form-label>
       <nz-form-control [nzSpan]="20">
-        <input nz-input formControlName="comment" id="comment" placeholder="输入产品备注">
+        <input nz-input formControlName="comment" id="comment" placeholder="输入产品备注" [(ngModel)]="currentSelectDeviceData.comment">
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="createTime">时间</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-date-picker formControlName="createTime" nzDisabled [(ngModel)]="createTimeDefault"></nz-date-picker>
+        <nz-date-picker formControlName="createTime" [(ngModel)]="currentSelectDeviceData.create_time" [nzDisabled]="isDeviceInfoDialogRead"></nz-date-picker>
       </nz-form-control>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="keepLiveInterval">心跳</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-input-number formControlName="keepLiveInterval" [(ngModel)]="keepLiveIntervalDefault" [nzMin]="1" [nzMax]="100" [nzStep]="1" [nzPlaceHolder]="'设备心跳间隔'"></nz-input-number>
+        <nz-input-number formControlName="keepLiveInterval" [(ngModel)]="currentSelectDeviceData.keep_live_interval" [nzMin]="1" [nzMax]="100" [nzStep]="1" [nzPlaceHolder]="'设备心跳间隔'" [nzDisabled]="isDeviceInfoDialogRead"></nz-input-number>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="batterySleepTime">休眠</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-input-number formControlName="batterySleepTime" [(ngModel)]="batterySleepTimeDefault" [nzMin]="1" [nzMax]="200" [nzStep]="1" [nzPlaceHolder]="'电源供电的休眠时间'"></nz-input-number>
+        <nz-input-number formControlName="batterySleepTime" [(ngModel)]="currentSelectDeviceData.battery_sleep_time" [nzMin]="1" [nzMax]="200" [nzStep]="1" [nzPlaceHolder]="'电源供电的休眠时间'" [nzDisabled]="isDeviceInfoDialogRead"></nz-input-number>
       </nz-form-control>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="batteryKeepLiveTime">连接</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-input-number formControlName="batteryKeepLiveTime" [(ngModel)]="batteryKeepLiveTimeDefault" [nzMin]="1" [nzMax]="400" [nzStep]="1" [nzPlaceHolder]="'保持连接的时间'"></nz-input-number>
+        <nz-input-number formControlName="batteryKeepLiveTime" [(ngModel)]="currentSelectDeviceData.battery_keep_live_time" [nzMin]="1" [nzMax]="400" [nzStep]="1" [nzPlaceHolder]="'保持连接的时间'" [nzDisabled]="isDeviceInfoDialogRead"></nz-input-number>
       </nz-form-control>
     </nz-form-item>
   </form>
