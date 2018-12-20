@@ -1,18 +1,18 @@
 export class DeviceEntity {
-  id: number;
-  uid: string;
-  imsi: string;
-  name: string;
-  serial_number: string;
-  type: string;
-  status: string;
-  user: string;
-  department: string;
-  comment: string;
-  create_time: string;
-  keep_live_interval: number;
-  battery_sleep_time: number;
-  battery_keep_live_time: number;
-  checked: boolean;
-  disable: boolean;
+  id = 0;
+  uid = '';
+  imsi = '';
+  name = '';
+  serial_number = '';
+  type = '';
+  status = '';
+  user = '';
+  department = '';
+  comment = '';
+  create_time = '';
+  keep_live_interval = 0;
+  battery_sleep_time = 0;
+  battery_keep_live_time = 0;
+  checked = false;
+  disable = false;
 }

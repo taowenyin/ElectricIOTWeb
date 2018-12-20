@@ -156,9 +156,8 @@ export class DeviceManageComponent implements OnInit {
   // 设备状态列表
   public deviceStatusList = [];
 
-  public deviceModifyBtnText = '保存';
-
-  public isSave = false;
+  // 设备详细对话框是否为保存状态
+  public isSaveStatus = false;
 
   // 当前选中设备的数据
   public currentSelectDeviceData: DeviceEntity = new DeviceEntity();
@@ -171,17 +170,17 @@ export class DeviceManageComponent implements OnInit {
 
   ngOnInit() {
     this.deviceInfoForm = this.formBuilder.group({
-      uid: [{value: null}, [Validators.required]],
-      imsi: [{value: null}, [Validators.required]],
-      name: [{value: null}, [Validators.required]],
-      serialName: [{value: null}, [Validators.required]],
-      deviceType: [null, [Validators.required]],
-      deviceStatus: [null, [Validators.required]],
-      comment: [{value: null}],
-      createTime: [null],
-      keepLiveInterval: [null],
-      batterySleepTime: [null],
-      batteryKeepLiveTime: [null],
+      uid: ['', [Validators.required]],
+      imsi: ['', [Validators.required]],
+      name: ['', [Validators.required]],
+      serialName: ['', [Validators.required]],
+      deviceType: ['', [Validators.required]],
+      deviceStatus: ['', [Validators.required]],
+      comment: [''],
+      createTime: [''],
+      keepLiveInterval: [''],
+      batterySleepTime: [''],
+      batteryKeepLiveTime: [''],
     });
 
     this.loadAllDevices();
@@ -308,17 +307,34 @@ export class DeviceManageComponent implements OnInit {
     this.currentSelectDeviceData = this.dataSet[index];
     this.isDeviceInfoDialogVisible = true;
 
+    console.log(this.currentSelectDeviceData);
+
+    // 设置打开对话框中的值
+    this.deviceInfoForm.get('uid').setValue(this.currentSelectDeviceData['uid']);
+    this.deviceInfoForm.get('imsi').setValue(this.currentSelectDeviceData['imsi']);
+    this.deviceInfoForm.get('name').setValue(this.currentSelectDeviceData['name']);
+    this.deviceInfoForm.get('serialName').setValue(this.currentSelectDeviceData['serial_number']);
+    this.deviceInfoForm.get('deviceType').setValue(this.currentSelectDeviceData['type']);
+    this.deviceInfoForm.get('deviceStatus').setValue(this.currentSelectDeviceData['status']);
+    this.deviceInfoForm.get('comment').setValue(this.currentSelectDeviceData['comment']);
+    this.deviceInfoForm.get('createTime').setValue(this.currentSelectDeviceData['create_time']);
+    this.deviceInfoForm.get('keepLiveInterval').setValue(this.currentSelectDeviceData['keep_live_interval']);
+    this.deviceInfoForm.get('batterySleepTime').setValue(this.currentSelectDeviceData['battery_sleep_time']);
+    this.deviceInfoForm.get('batteryKeepLiveTime').setValue(this.currentSelectDeviceData['battery_keep_live_time']);
+
     this.deviceInfoForm.disable();
   }
 
   // 修改设备详细信息对话框
   public modifyInfoModalDialog(): void {
-    if (this.isSave) {
+    if (this.isSaveStatus) {
       this.deviceInfoForm.disable();
-      this.isSave = false;
+      this.isSaveStatus = false;
     } else {
       this.deviceInfoForm.enable();
-      this.isSave = true;
+      this.deviceInfoForm.get('imsi').disable();
+      this.deviceInfoForm.get('createTime').disable();
+      this.isSaveStatus = true;
     }
   }
 
@@ -332,6 +348,9 @@ export class DeviceManageComponent implements OnInit {
 
   public handleCancel(): void {
     this.isDeviceInfoDialogVisible = false;
+    // 窗口退出时
+    this.deviceInfoForm.disable();
+    this.isSaveStatus = false;
   }
 
   // 载入更多的设备类型
