@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DeviceService} from '../../../core/device.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DeviceEntity} from '../../../entity/device.entity';
+import {NzMessageService} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-device-manage',
@@ -11,62 +12,7 @@ import {DeviceEntity} from '../../../entity/device.entity';
 export class DeviceManageComponent implements OnInit {
 
   // 网络获取的原始数据
-  public rawData: DeviceEntity[] = [
-    {
-      id  : 1,
-      uid : 'MS-01',
-      imsi  : '123456789',
-      name  : '测试设备1',
-      serial_number : '1234567',
-      type  : '测试设备类型1',
-      status  : '测试设备状态1',
-      user  : '保管员1',
-      department  : '研发部门1',
-      comment  : '测试说明1',
-      create_time  : '2018-11-20 21:10:30',
-      keep_live_interval  : 60,
-      battery_sleep_time  : 60,
-      battery_keep_live_time  : 60,
-      checked  : false,
-      disable  : false,
-    },
-    {
-      id  : 2,
-      uid : 'MS-02',
-      imsi  : '123456789',
-      name  : '测试设备2',
-      serial_number : '1234567',
-      type  : '测试设备类型2',
-      status  : '测试设备状态2',
-      user  : '保管员2',
-      department  : '研发部门2',
-      comment  : '测试说明2',
-      create_time  : '2018-11-20 22:10:30',
-      keep_live_interval  : 50,
-      battery_sleep_time  : 70,
-      battery_keep_live_time  : 90,
-      checked  : false,
-      disable  : false,
-    },
-    {
-      id  : 3,
-      uid : 'MS-03',
-      imsi  : '123456789',
-      name  : '测试设备3',
-      serial_number : '1234567',
-      type  : '测试设备类型3',
-      status  : '测试设备状态3',
-      user  : '保管员3',
-      department  : '研发部门3',
-      comment  : '测试说明3',
-      create_time  : '2018-11-20 20:10:30',
-      keep_live_interval  : 40,
-      battery_sleep_time  : 60,
-      battery_keep_live_time  : 80,
-      checked  : false,
-      disable  : false,
-    },
-  ];
+  public rawData: DeviceEntity[] = [];
 
   public uidList = [
     {text: 'MS-01', value: 'MS-01', byDefault: false},
@@ -157,30 +103,32 @@ export class DeviceManageComponent implements OnInit {
   public deviceStatusList = [];
 
   // 设备详细对话框是否为保存状态
-  public isSaveStatus = false;
+  public isWriteStatus = false;
 
   // 当前选中设备的数据
   public currentSelectDeviceData: DeviceEntity = new DeviceEntity();
 
   constructor(
     private deviceService: DeviceService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private message: NzMessageService
   ) {
   }
 
   ngOnInit() {
     this.deviceInfoForm = this.formBuilder.group({
+      id: ['', [Validators.required]],
       uid: ['', [Validators.required]],
       imsi: ['', [Validators.required]],
       name: ['', [Validators.required]],
-      serialName: ['', [Validators.required]],
-      deviceType: ['', [Validators.required]],
-      deviceStatus: ['', [Validators.required]],
+      serial_number: ['', [Validators.required]],
+      type_id: ['', [Validators.required]],
+      status_id: ['', [Validators.required]],
       comment: [''],
-      createTime: [''],
-      keepLiveInterval: [''],
-      batterySleepTime: [''],
-      batteryKeepLiveTime: [''],
+      create_time: [''],
+      keep_live_interval: [''],
+      battery_sleep_time: [''],
+      battery_keep_live_time: [''],
     });
 
     this.loadAllDevices();
@@ -195,9 +143,14 @@ export class DeviceManageComponent implements OnInit {
     imsi: string;
     name: string;
     serial_number: string;
+    is_delete: number;
+    type_id: number;
     type: string;
+    status_id: number;
     status: string;
+    user_id: number;
     user: string;
+    department_id: number;
     department: string;
     comment: string;
     create_time: string;
@@ -260,84 +213,76 @@ export class DeviceManageComponent implements OnInit {
     this.search();
   }
 
-  private search(): void {
-
-    // 筛选回调函数
-    const filterFunc = item => {
-      return (this.listOfSearchUID.length ? this.listOfSearchUID.some(
-        uid => item.uid.indexOf((typeof uid === 'string') ? uid : uid.value) !== -1) : true) &&
-        (this.listOfSearchIMSI.length ? this.listOfSearchIMSI.some(
-          imsi => item.imsi.indexOf((typeof imsi === 'string') ? imsi : imsi.value) !== -1) : true) &&
-        (this.listOfSearchName.length ? this.listOfSearchName.some(
-          name => item.name.indexOf((typeof name === 'string') ? name : name.value) !== -1) : true) &&
-        (this.listOfSearchSerialNumber.length ? this.listOfSearchSerialNumber.some(
-          serialNumber => item.serial_number.indexOf(
-            (typeof serialNumber === 'string') ? serialNumber : serialNumber.value) !== -1) : true) &&
-        (this.listOfSearchType.length ? this.listOfSearchType.some(
-          type => item.type.indexOf((typeof type === 'string') ? type : type.value) !== -1) : true) &&
-        (this.listOfSearchStatus.length ? this.listOfSearchStatus.some(
-          status => item.status.indexOf((typeof status === 'string') ? status : status.value) !== -1) : true) &&
-        (this.listOfSearchUser.length ? this.listOfSearchUser.some(
-          user => item.user.indexOf((typeof user === 'string') ? user : user.value) !== -1) : true) &&
-        (this.listOfSearchDepartment.length ? this.listOfSearchDepartment.some(
-          department => item.department.indexOf((typeof department === 'string') ? department : department.value) !== -1) : true);
-    };
-    let data = this.dataSet.filter(item => filterFunc(item));
-
-    // 判断是否需要排序
-    if (this.sortName && this.sortValue) {
-      data = data.sort(
-        (a, b) => (this.sortValue === 'ascend') ?
-          (a[this.sortName] > b[this.sortName] ? 1 : -1) :
-          (b[this.sortName] > a[this.sortName] ? 1 : -1));
-    }
-
-    // 由于两个数组的地址不同，因此不能直接拷贝
-    this.dataSet = data.slice(0, data.length);
-  }
-
   // 更新原始数据
   public updateRawData(): void {
     console.log('===updateRawData===');
   }
 
   // 显示设备详细信息对话框
-  public showInfoModalDialog(index: number): void {
-    console.log('showInfoModalDialog ID = ' + index);
+  public handleShow(index: number): void {
     this.currentSelectDeviceData = this.dataSet[index];
     this.isDeviceInfoDialogVisible = true;
 
-    console.log(this.currentSelectDeviceData);
-
     // 设置打开对话框中的值
+    this.deviceInfoForm.get('id').setValue(this.currentSelectDeviceData['id']);
     this.deviceInfoForm.get('uid').setValue(this.currentSelectDeviceData['uid']);
     this.deviceInfoForm.get('imsi').setValue(this.currentSelectDeviceData['imsi']);
     this.deviceInfoForm.get('name').setValue(this.currentSelectDeviceData['name']);
-    this.deviceInfoForm.get('serialName').setValue(this.currentSelectDeviceData['serial_number']);
-    this.deviceInfoForm.get('deviceType').setValue(this.currentSelectDeviceData['type']);
-    this.deviceInfoForm.get('deviceStatus').setValue(this.currentSelectDeviceData['status']);
+    this.deviceInfoForm.get('serial_number').setValue(this.currentSelectDeviceData['serial_number']);
+    this.deviceInfoForm.get('type_id').setValue(this.currentSelectDeviceData['type_id']);
+    this.deviceInfoForm.get('status_id').setValue(this.currentSelectDeviceData['status_id']);
     this.deviceInfoForm.get('comment').setValue(this.currentSelectDeviceData['comment']);
-    this.deviceInfoForm.get('createTime').setValue(this.currentSelectDeviceData['create_time']);
-    this.deviceInfoForm.get('keepLiveInterval').setValue(this.currentSelectDeviceData['keep_live_interval']);
-    this.deviceInfoForm.get('batterySleepTime').setValue(this.currentSelectDeviceData['battery_sleep_time']);
-    this.deviceInfoForm.get('batteryKeepLiveTime').setValue(this.currentSelectDeviceData['battery_keep_live_time']);
+    this.deviceInfoForm.get('create_time').setValue(this.currentSelectDeviceData['create_time']);
+    this.deviceInfoForm.get('keep_live_interval').setValue(this.currentSelectDeviceData['keep_live_interval']);
+    this.deviceInfoForm.get('battery_sleep_time').setValue(this.currentSelectDeviceData['battery_sleep_time']);
+    this.deviceInfoForm.get('battery_keep_live_time').setValue(this.currentSelectDeviceData['battery_keep_live_time']);
 
     this.deviceInfoForm.disable();
   }
 
   // 修改设备详细信息对话框
-  public modifyInfoModalDialog(): void {
-    if (this.isSaveStatus) {
+  public handleModify(): void {
+
+    if (this.isWriteStatus) {
       this.deviceInfoForm.disable();
-      this.isSaveStatus = false;
+      this.isWriteStatus = false;
+      this.isOkLoading = true;
+
+      // 获取表单中的数据
+      const deviceFormData: FormData = new FormData();
+      console.log(this.deviceInfoForm.value);
+      for (const key in this.deviceInfoForm.value) {
+        deviceFormData.append(key.toString(), this.deviceInfoForm.value[key.toString()]);
+      }
+
+      // 向服务器更新
+      this.deviceService.modifyDeviceInfo(deviceFormData).subscribe(
+        data => {
+          console.log(data);
+          if (data.code === 0) {
+            this.message.create('success', '修改成功');
+          } else {
+            this.message.create('error', '修改失败:' + data.msg);
+          }
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+          this.isOkLoading = false;
+          this.isDeviceInfoDialogVisible = false;
+        }
+      );
+
     } else {
       this.deviceInfoForm.enable();
       this.deviceInfoForm.get('imsi').disable();
-      this.deviceInfoForm.get('createTime').disable();
-      this.isSaveStatus = true;
+      this.deviceInfoForm.get('create_time').disable();
+      this.isWriteStatus = true;
     }
   }
 
+  // 范例函数
   public handleOk(): void {
     this.isOkLoading = true;
     window.setTimeout(() => {
@@ -348,9 +293,12 @@ export class DeviceManageComponent implements OnInit {
 
   public handleCancel(): void {
     this.isDeviceInfoDialogVisible = false;
-    // 窗口退出时
+    // 窗口退出时禁用设备信息窗口
     this.deviceInfoForm.disable();
-    this.isSaveStatus = false;
+
+    this.isWriteStatus = false;
+    // 关闭按钮载入状态
+    this.isOkLoading = false;
   }
 
   // 载入更多的设备类型
@@ -425,6 +373,42 @@ export class DeviceManageComponent implements OnInit {
         console.log('Get All Devices Complete');
       }
     );
+  }
+
+  private search(): void {
+
+    // 筛选回调函数
+    const filterFunc = item => {
+      return (this.listOfSearchUID.length ? this.listOfSearchUID.some(
+        uid => item.uid.indexOf((typeof uid === 'string') ? uid : uid.value) !== -1) : true) &&
+        (this.listOfSearchIMSI.length ? this.listOfSearchIMSI.some(
+          imsi => item.imsi.indexOf((typeof imsi === 'string') ? imsi : imsi.value) !== -1) : true) &&
+        (this.listOfSearchName.length ? this.listOfSearchName.some(
+          name => item.name.indexOf((typeof name === 'string') ? name : name.value) !== -1) : true) &&
+        (this.listOfSearchSerialNumber.length ? this.listOfSearchSerialNumber.some(
+          serialNumber => item.serial_number.indexOf(
+            (typeof serialNumber === 'string') ? serialNumber : serialNumber.value) !== -1) : true) &&
+        (this.listOfSearchType.length ? this.listOfSearchType.some(
+          type => item.type.indexOf((typeof type === 'string') ? type : type.value) !== -1) : true) &&
+        (this.listOfSearchStatus.length ? this.listOfSearchStatus.some(
+          status => item.status.indexOf((typeof status === 'string') ? status : status.value) !== -1) : true) &&
+        (this.listOfSearchUser.length ? this.listOfSearchUser.some(
+          user => item.user.indexOf((typeof user === 'string') ? user : user.value) !== -1) : true) &&
+        (this.listOfSearchDepartment.length ? this.listOfSearchDepartment.some(
+          department => item.department.indexOf((typeof department === 'string') ? department : department.value) !== -1) : true);
+    };
+    let data = this.dataSet.filter(item => filterFunc(item));
+
+    // 判断是否需要排序
+    if (this.sortName && this.sortValue) {
+      data = data.sort(
+        (a, b) => (this.sortValue === 'ascend') ?
+          (a[this.sortName] > b[this.sortName] ? 1 : -1) :
+          (b[this.sortName] > a[this.sortName] ? 1 : -1));
+    }
+
+    // 由于两个数组的地址不同，因此不能直接拷贝
+    this.dataSet = data.slice(0, data.length);
   }
 
 }
