@@ -141,8 +141,6 @@ export class DeviceManageComponent implements OnInit {
 
   // 设备详细信息对话框显示状态位
   public isDeviceInfoDialogVisible = false;
-  // 设备详细信息对话框显示为只读状态
-  public isDeviceInfoDialogRead = false;
   // 设备详细信息是否载入完成
   public isOkLoading = false;
 
@@ -158,6 +156,10 @@ export class DeviceManageComponent implements OnInit {
   // 设备状态列表
   public deviceStatusList = [];
 
+  public deviceModifyBtnText = '保存';
+
+  public isSave = false;
+
   // 当前选中设备的数据
   public currentSelectDeviceData: DeviceEntity = new DeviceEntity();
 
@@ -169,13 +171,13 @@ export class DeviceManageComponent implements OnInit {
 
   ngOnInit() {
     this.deviceInfoForm = this.formBuilder.group({
-      uid: [{value: null, disabled: this.isDeviceInfoDialogRead}, [Validators.required]],
-      imsi: [{value: null, disabled: this.isDeviceInfoDialogRead}, [Validators.required]],
-      name: [{value: null, disabled: this.isDeviceInfoDialogRead}, [Validators.required]],
-      serialName: [{value: null, disabled: this.isDeviceInfoDialogRead}, [Validators.required]],
+      uid: [{value: null}, [Validators.required]],
+      imsi: [{value: null}, [Validators.required]],
+      name: [{value: null}, [Validators.required]],
+      serialName: [{value: null}, [Validators.required]],
       deviceType: [null, [Validators.required]],
       deviceStatus: [null, [Validators.required]],
-      comment: [{value: null, disabled: this.isDeviceInfoDialogRead}],
+      comment: [{value: null}],
       createTime: [null],
       keepLiveInterval: [null],
       batterySleepTime: [null],
@@ -300,18 +302,24 @@ export class DeviceManageComponent implements OnInit {
     console.log('===updateRawData===');
   }
 
-  // 显示详细信息对话框
+  // 显示设备详细信息对话框
   public showInfoModalDialog(index: number): void {
     console.log('showInfoModalDialog ID = ' + index);
     this.currentSelectDeviceData = this.dataSet[index];
     this.isDeviceInfoDialogVisible = true;
-    this.isDeviceInfoDialogRead = true;
 
-    this.deviceInfoForm.get('uid').disable();
-    this.deviceInfoForm.get('imsi').disable();
-    this.deviceInfoForm.get('name').disable();
-    this.deviceInfoForm.get('serialName').disable();
-    this.deviceInfoForm.get('comment').disable();
+    this.deviceInfoForm.disable();
+  }
+
+  // 修改设备详细信息对话框
+  public modifyInfoModalDialog(): void {
+    if (this.isSave) {
+      this.deviceInfoForm.disable();
+      this.isSave = false;
+    } else {
+      this.deviceInfoForm.enable();
+      this.isSave = true;
+    }
   }
 
   public handleOk(): void {
