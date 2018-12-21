@@ -63,6 +63,8 @@ export class DeviceManageComponent implements OnInit {
   public dataSet: DeviceEntity[] = Object.assign([], this.rawData);
   // 表格中显示的数据
   public displayData: DeviceEntity[] = [];
+  // 表格载入中
+  public isTableDataLoading = false;
 
   // 需要进行排序的标签名
   public sortName = null;
@@ -215,7 +217,9 @@ export class DeviceManageComponent implements OnInit {
 
   // 更新原始数据
   public updateRawData(): void {
-    console.log('===updateRawData===');
+    // 清空原数据
+    this.rawData.splice(0, this.rawData.length);
+    this.loadAllDevices();
   }
 
   // 显示设备详细信息对话框
@@ -252,7 +256,7 @@ export class DeviceManageComponent implements OnInit {
       const deviceFormData: FormData = new FormData();
       console.log(this.deviceInfoForm.value);
       for (const key in this.deviceInfoForm.value) {
-        deviceFormData.append(key.toString(), this.deviceInfoForm.value[key.toString()]);
+        deviceFormData.append(key, this.deviceInfoForm.value[key]);
       }
 
       // 向服务器更新
@@ -260,6 +264,10 @@ export class DeviceManageComponent implements OnInit {
         data => {
           console.log(data);
           if (data.code === 0) {
+            // 更新数据表中的数据显示
+            for (const key in this.deviceInfoForm.value) {
+              this.currentSelectDeviceData[key] = this.deviceInfoForm.value[key];
+            }
             this.message.create('success', '修改成功');
           } else {
             this.message.create('error', '修改失败:' + data.msg);
@@ -343,6 +351,8 @@ export class DeviceManageComponent implements OnInit {
 
   // 载入所有的设备类型
   public loadAllDevices(): void {
+    // 表格数据载入中
+    this.isTableDataLoading = true;
     this.deviceService.getAllDevices().subscribe(
       data => {
         if (data.code === 0) {
@@ -370,6 +380,7 @@ export class DeviceManageComponent implements OnInit {
         console.log(error);
       },
       () => {
+        this.isTableDataLoading = false;
         console.log('Get All Devices Complete');
       }
     );

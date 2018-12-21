@@ -12,6 +12,7 @@
   </div>
   <nz-table
     #deviceTable
+    [nzLoading]="isTableDataLoading"
     [nzData]="dataSet"
     (nzCurrentPageDataChange)="currentPageDataChange($event)"
     (nzPageIndexChange)="refreshStatus()"
