@@ -1,13 +1,13 @@
 <div>
   <div class="table-operations">
     <div>
-      <button nz-button nzType="primary" nzShape="circle" (click)="updateRawData()"><i nz-icon type="cloud-download" theme="outline"></i></button>
+      <button nz-button nzType="primary" nzShape="circle" (click)="handleUpdateRawData()"><i nz-icon type="cloud-download" theme="outline"></i></button>
     </div>
     <div class="flex-mach-parent">
 
     </div>
     <div class="flex-right">
-      <button nz-button nzType="primary"><i nz-icon type="plus" theme="outline"></i>添加设备</button>
+      <button nz-button nzType="primary" (click)="handleCreateDevice()"><i nz-icon type="plus" theme="outline"></i>添加设备</button>
     </div>
   </div>
   <nz-table
@@ -50,7 +50,7 @@
 
 <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isDeviceInfoDialogVisible" nzTitle="设备信息" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
   <form nz-form [formGroup]="deviceInfoForm">
-    <nz-form-item style="display: none">
+    <nz-form-item hidden>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="id">ID</nz-form-label>
       <nz-form-control [nzSpan]="20">
         <input nz-input formControlName="id" id="id" placeholder="填入产品ID">
@@ -102,6 +102,26 @@
           <nz-option *ngIf="isStatusLoading" nzDisabled nzCustomContent>
             <i nz-icon type="loading" theme="outline"></i> 载入数据中...
           </nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="4" nzRequired nzFor="department_id">部门</nz-form-label>
+      <nz-form-control [nzSpan]="8">
+        <nz-select formControlName="department_id" name="department_id" id="department_id" (nzScrollToBottom)="loadDeviceTypesMore()" nzPlaceHolder="所属部门" nzAllowClear>
+          <!--<nz-option *ngFor="let typeItem of deviceTypeList" [nzValue]="typeItem.id" [nzLabel]="typeItem.name"></nz-option>-->
+          <!--<nz-option *ngIf="isTypeLoading" nzDisabled nzCustomContent>-->
+            <!--<i nz-icon type="loading" theme="outline"></i> 载入数据中...-->
+          <!--</nz-option>-->
+        </nz-select>
+      </nz-form-control>
+      <nz-form-label [nzSpan]="4" nzRequired nzFor="user_id">保管</nz-form-label>
+      <nz-form-control [nzSpan]="8">
+        <nz-select formControlName="user_id" name="user_id" id="user_id" (nzScrollToBottom)="loadDeviceStatusMore()" nzPlaceHolder="保管员" nzAllowClear>
+          <!--<nz-option *ngFor="let statusItem of deviceStatusList" [nzValue]="statusItem.id" [nzLabel]="statusItem.name"></nz-option>-->
+          <!--<nz-option *ngIf="isStatusLoading" nzDisabled nzCustomContent>-->
+            <!--<i nz-icon type="loading" theme="outline"></i> 载入数据中...-->
+          <!--</nz-option>-->
         </nz-select>
       </nz-form-control>
     </nz-form-item>

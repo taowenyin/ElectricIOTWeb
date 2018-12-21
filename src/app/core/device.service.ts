@@ -28,4 +28,8 @@ export class DeviceService {
   public modifyDeviceInfo(deviceData: FormData): Observable<ReponseEntity> {
     return this.http.put<ReponseEntity>(API_MANAGE_DEVICE, deviceData);
   }
+
+  public createDevice(deviceData: FormData): Observable<ReponseEntity> {
+    return this.http.post<ReponseEntity>(API_MANAGE_DEVICE, deviceData);
+  }
 }

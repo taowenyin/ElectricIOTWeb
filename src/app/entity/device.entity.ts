@@ -15,9 +15,33 @@ export class DeviceEntity {
   department: string;
   comment: string;
   create_time: string;
-  keep_live_interval: number;
-  battery_sleep_time: number;
-  battery_keep_live_time: number;
+  keep_live_interval = 60;
+  battery_sleep_time = 180;
+  battery_keep_live_time = 300;
   checked: boolean;
   disable: boolean;
+
+  public clear(): void {
+    this.id = 0;
+    this.uid = '';
+    this.imsi = '';
+    this.name = '';
+    this.serial_number = '';
+    this.is_delete = 0;
+    this.type_id = 0;
+    this.type = '';
+    this.status_id = 0;
+    this.status = '';
+    this.user_id = 0;
+    this.user = '';
+    this.department_id = 0;
+    this.department = '';
+    this.comment = '';
+    this.create_time = '';
+    this.keep_live_interval = 60;
+    this.battery_sleep_time = 180;
+    this.battery_keep_live_time = 300;
+    this.checked = false;
+    this.disable = false;
+  }
 }

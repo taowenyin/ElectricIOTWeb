@@ -103,9 +103,15 @@ export class DeviceManageComponent implements OnInit {
   public deviceTypeList = [];
   // 设备状态列表
   public deviceStatusList = [];
+  // // 部门列表
+  // public departmentList = [];
+  // // 所属部门的员工列表
+  // public user4DepartmentList = [];
 
   // 设备详细对话框是否为保存状态
   public isWriteStatus = false;
+  // 设备详细对话框是否为创建状态
+  public isCreateStatus = false;
 
   // 当前选中设备的数据
   public currentSelectDeviceData: DeviceEntity = new DeviceEntity();
@@ -126,6 +132,8 @@ export class DeviceManageComponent implements OnInit {
       serial_number: ['', [Validators.required]],
       type_id: ['', [Validators.required]],
       status_id: ['', [Validators.required]],
+      department_id: ['', [Validators.required]],
+      user_id: ['', [Validators.required]],
       comment: [''],
       create_time: [''],
       keep_live_interval: [''],
@@ -139,28 +147,7 @@ export class DeviceManageComponent implements OnInit {
   }
 
   // 获取当前页面的数据
-  public currentPageDataChange($event: Array<{
-    id: number;
-    uid: string;
-    imsi: string;
-    name: string;
-    serial_number: string;
-    is_delete: number;
-    type_id: number;
-    type: string;
-    status_id: number;
-    status: string;
-    user_id: number;
-    user: string;
-    department_id: number;
-    department: string;
-    comment: string;
-    create_time: string;
-    keep_live_interval: number;
-    battery_sleep_time: number;
-    battery_keep_live_time: number;
-    checked: boolean;
-    disable: boolean}>): void {
+  public currentPageDataChange($event: Array<DeviceEntity>): void {
     this.displayData = $event;
   }
 
@@ -216,31 +203,32 @@ export class DeviceManageComponent implements OnInit {
   }
 
   // 更新原始数据
-  public updateRawData(): void {
+  public handleUpdateRawData(): void {
     // 清空原数据
     this.rawData.splice(0, this.rawData.length);
     this.loadAllDevices();
   }
 
+  // 创建新设备
+  public handleCreateDevice(): void {
+    // 创建新的设备数据
+    this.currentSelectDeviceData = new DeviceEntity();
+
+    // 表单载入数据
+    this.loadDeviceFormData(this.currentSelectDeviceData);
+    this.isWriteStatus = true;
+    this.isCreateStatus = true;
+    this.isDeviceInfoDialogVisible = true;
+    this.deviceInfoForm.enable();
+  }
+
   // 显示设备详细信息对话框
   public handleShow(index: number): void {
     this.currentSelectDeviceData = this.dataSet[index];
+    // 表单载入数据
+    this.loadDeviceFormData(this.currentSelectDeviceData);
+
     this.isDeviceInfoDialogVisible = true;
-
-    // 设置打开对话框中的值
-    this.deviceInfoForm.get('id').setValue(this.currentSelectDeviceData['id']);
-    this.deviceInfoForm.get('uid').setValue(this.currentSelectDeviceData['uid']);
-    this.deviceInfoForm.get('imsi').setValue(this.currentSelectDeviceData['imsi']);
-    this.deviceInfoForm.get('name').setValue(this.currentSelectDeviceData['name']);
-    this.deviceInfoForm.get('serial_number').setValue(this.currentSelectDeviceData['serial_number']);
-    this.deviceInfoForm.get('type_id').setValue(this.currentSelectDeviceData['type_id']);
-    this.deviceInfoForm.get('status_id').setValue(this.currentSelectDeviceData['status_id']);
-    this.deviceInfoForm.get('comment').setValue(this.currentSelectDeviceData['comment']);
-    this.deviceInfoForm.get('create_time').setValue(this.currentSelectDeviceData['create_time']);
-    this.deviceInfoForm.get('keep_live_interval').setValue(this.currentSelectDeviceData['keep_live_interval']);
-    this.deviceInfoForm.get('battery_sleep_time').setValue(this.currentSelectDeviceData['battery_sleep_time']);
-    this.deviceInfoForm.get('battery_keep_live_time').setValue(this.currentSelectDeviceData['battery_keep_live_time']);
-
     this.deviceInfoForm.disable();
   }
 
@@ -249,39 +237,73 @@ export class DeviceManageComponent implements OnInit {
 
     if (this.isWriteStatus) {
       this.deviceInfoForm.disable();
-      this.isWriteStatus = false;
       this.isOkLoading = true;
+
+      console.log(this.deviceInfoForm.value);
 
       // 获取表单中的数据
       const deviceFormData: FormData = new FormData();
-      console.log(this.deviceInfoForm.value);
       for (const key in this.deviceInfoForm.value) {
-        deviceFormData.append(key, this.deviceInfoForm.value[key]);
+        if (this.deviceInfoForm.value[key] !== undefined) {
+          console.log('Key = ' + key + ' Value = ' + this.deviceInfoForm.value[key]);
+          if (key === 'create_time') {
+            // console.log('Get Date = ' + moment(this.deviceInfoForm.value[key].toString()).format("YYYY-MM-DD HH:mm:ss"));
+          } else {
+            deviceFormData.append(key, this.deviceInfoForm.value[key]);
+          }
+        }
       }
 
-      // 向服务器更新
-      this.deviceService.modifyDeviceInfo(deviceFormData).subscribe(
-        data => {
-          console.log(data);
-          if (data.code === 0) {
-            // 更新数据表中的数据显示
-            for (const key in this.deviceInfoForm.value) {
-              this.currentSelectDeviceData[key] = this.deviceInfoForm.value[key];
-            }
-            this.message.create('success', '修改成功');
-          } else {
-            this.message.create('error', '修改失败:' + data.msg);
-          }
-        },
-        error => {
-          console.log(error);
-        },
-        () => {
-          this.isOkLoading = false;
-          this.isDeviceInfoDialogVisible = false;
-        }
-      );
+      // 创建设备
+      if (this.isCreateStatus) {
+        // 如果是创建设备要把更新状态关闭
+        this.isWriteStatus = false;
+        console.log('===Create Device===');
+        this.isCreateStatus = false;
+        console.log(deviceFormData);
 
+        // this.deviceService.createDevice(deviceFormData).subscribe(
+        //   data => {
+        //     console.log(data);
+        //   },
+        //   error => {
+        //     console.log(error);
+        //   },
+        //   () => {
+        //     console.log('===createDevice===');
+        //   }
+        // );
+      }
+
+      // 更新信息
+      if (this.isWriteStatus) {
+        console.log('===Write Device===');
+        // 向服务器更新
+        this.deviceService.modifyDeviceInfo(deviceFormData).subscribe(
+          data => {
+            console.log(data);
+            if (data.code === 0) {
+              // 更新数据表中的数据显示
+              for (const key in this.deviceInfoForm.value) {
+                this.currentSelectDeviceData[key] = this.deviceInfoForm.value[key];
+              }
+              this.message.create('success', '修改成功');
+            } else {
+              this.message.create('error', '修改失败:' + data.msg);
+            }
+          },
+          error => {
+            console.log(error);
+          },
+          () => {
+            this.isWriteStatus = false;
+            this.isOkLoading = false;
+            this.isDeviceInfoDialogVisible = false;
+
+            console.log('===modifyDeviceInfo===');
+          }
+        );
+      }
     } else {
       this.deviceInfoForm.enable();
       this.deviceInfoForm.get('imsi').disable();
@@ -304,7 +326,10 @@ export class DeviceManageComponent implements OnInit {
     // 窗口退出时禁用设备信息窗口
     this.deviceInfoForm.disable();
 
+    // 关闭写状态
     this.isWriteStatus = false;
+    // 关闭创建状态
+    this.isCreateStatus = false;
     // 关闭按钮载入状态
     this.isOkLoading = false;
   }
@@ -384,6 +409,24 @@ export class DeviceManageComponent implements OnInit {
         console.log('Get All Devices Complete');
       }
     );
+  }
+
+  private loadDeviceFormData(data: DeviceEntity): void {
+    // 设置打开对话框中的值
+    this.deviceInfoForm.get('id').setValue(data['id']);
+    this.deviceInfoForm.get('uid').setValue(data['uid']);
+    this.deviceInfoForm.get('imsi').setValue(data['imsi']);
+    this.deviceInfoForm.get('name').setValue(data['name']);
+    this.deviceInfoForm.get('serial_number').setValue(data['serial_number']);
+    this.deviceInfoForm.get('type_id').setValue(data['type_id']);
+    this.deviceInfoForm.get('status_id').setValue(data['status_id']);
+    this.deviceInfoForm.get('department_id').setValue(data['department_id']);
+    this.deviceInfoForm.get('user_id').setValue(data['user_id']);
+    this.deviceInfoForm.get('comment').setValue(data['comment']);
+    this.deviceInfoForm.get('create_time').setValue(data['create_time']);
+    this.deviceInfoForm.get('keep_live_interval').setValue(data['keep_live_interval']);
+    this.deviceInfoForm.get('battery_sleep_time').setValue(data['battery_sleep_time']);
+    this.deviceInfoForm.get('battery_keep_live_time').setValue(data['battery_keep_live_time']);
   }
 
   private search(): void {
