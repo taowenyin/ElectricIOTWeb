@@ -11,12 +11,12 @@ before_install:
 - npm install
 script:
 - ng build
+- tar -zcvf dist.tar.gz ./dist
 deploy:
   provider: releases
   api_key:
     secure: pgHb2fHhKUos+EE1SQwdbVEfvb+kbMC6uVYYfwKdD2TwmbDR8Y5ZZhDOrsbBrKn1YgLObPj0Qk13tqHyxrKFrMuxSVR+jxjOjtQhH9+wBWvEQdN7TTZNzRs9AH3XA3eNphI3QoCtohJ9rIbUfne5jrnGfBNz4Ij8cXY+0WqkI6LdQvfjlBQ2CBqrCRCm2SL42PVTm18AzKea/Qt04mvV3vrALGUURKL7XBaBb+LZl88eu8VR8I4PK9mxx/gIRNSvlivzRcmae52Dmp4NbPDMrHzfwEwZFaUnmLsc2C523DCJpS7XD8h0aT82wZ0JQefv5h6z/+Chq+g8DzsM21afpM+pByEeX75ZG2E3JU0ZInZDEniKEJ5ezk0DNXqQ5VmCNzRAqpfqiah9Hi74Se4MQha8TsU8ARdM3NEeo67ufcMDpvquc/XnDEmCccszEvU0ChpXKVAcYOGQXxES9Mw7Uw/BsksY7i3nc9ffvue4WTMKVN1bIBIBIlAPv1IkccMnswZyDzAQOWP+X5Y/c9qxP48xyGaFkw6Ojvryw49OEuDFPUB7Fx6ijxCdU3zVCZebxZz8zGgPt/b4AMRXkuokYs/CXD3UmjT6YZncuoBi0AZAavv08V9JCUjY+pGsMsEE/k2X+q7CeqedYVcaU7RwqxKn/EE96xVzOWsnaSayyKA=
-  file_glob: true
-  file: dist/**/*
+  file: dist.tar.gz
   skip_cleanup: true
   on:
     repo: taowenyin/ElectricIOTWeb
