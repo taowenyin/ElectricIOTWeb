@@ -12,9 +12,9 @@ export SERVER_CMD4="exit"
     echo $SERVER_USERNAME;
     sleep 10;
     echo $SERVER_PASSWORD;
-    sleep 10;
+    sleep 20;
     echo $SERVER_CMD1;
-    sleep 10;
+    sleep 20;
     echo $SERVER_CMD2;
     sleep 50;
     echo $SERVER_CMD3;
