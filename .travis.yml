@@ -1,0 +1,14 @@
+language: node_js
+sudo: false
+
+before_install:
+- curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+- source ~/.bashrc
+- nvm install node
+- npm install -g fis3
+- npm install -g @angular/cli
+- npm install fis3-deploy-http-push --save-dev
+- npm install
+script:
+- "ng build"
+before_cache:
