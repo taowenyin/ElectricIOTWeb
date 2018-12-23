@@ -11,4 +11,5 @@ before_install:
 - npm install
 script:
 - "ng build"
+- "fis3 release"
 before_cache:
