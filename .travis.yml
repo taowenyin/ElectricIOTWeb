@@ -23,4 +23,3 @@ deploy:
     repo: taowenyin/ElectricIOTWeb
 after_deploy:
 - fis3 release
-- ./deploy_to_server.sh
