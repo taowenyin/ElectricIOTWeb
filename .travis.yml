@@ -9,7 +9,6 @@ before_install:
 - npm install -g @angular/cli
 - npm install fis3-deploy-http-push --save-dev
 - npm install
-- chmod +x ./deploy_to_server.sh
 script:
 - ng build
 - tar -zcvf dist.tar.gz dist
@@ -20,6 +19,8 @@ deploy:
   file: dist.tar.gz
   skip_cleanup: true
   on:
+    tags: true
+    all_branches: true
     repo: taowenyin/ElectricIOTWeb
 after_deploy:
 - fis3 release
