@@ -3,6 +3,9 @@ import {DeviceService} from '../../../core/device.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DeviceEntity} from '../../../entity/device.entity';
 import {NzMessageService} from 'ng-zorro-antd';
+import * as moment from 'moment';
+import {DepartmentService} from '../../../core/department.service';
+import {UserService} from '../../../core/user.service';
 
 @Component({
   selector: 'app-device-manage',
@@ -99,14 +102,18 @@ export class DeviceManageComponent implements OnInit {
   public isTypeLoading = false;
   // 是否载入状态数据中
   public isStatusLoading = false;
+  // 是否载入部门数据中
+  public isDepartmentLoading = false;
+  // 是否载入用户数据中
+  public isUserLoading = false;
   // 设备类型列表
   public deviceTypeList = [];
   // 设备状态列表
   public deviceStatusList = [];
-  // // 部门列表
-  // public departmentList = [];
-  // // 所属部门的员工列表
-  // public user4DepartmentList = [];
+  // 部门列表
+  public deviceDepartmentList = [];
+  // 所属部门的员工列表
+  public deviceUserList = [];
 
   // 设备详细对话框是否为保存状态
   public isWriteStatus = false;
@@ -118,6 +125,8 @@ export class DeviceManageComponent implements OnInit {
 
   constructor(
     private deviceService: DeviceService,
+    private departmentService: DepartmentService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private message: NzMessageService
   ) {
@@ -144,6 +153,7 @@ export class DeviceManageComponent implements OnInit {
     this.loadAllDevices();
     this.loadDeviceTypesMore();
     this.loadDeviceStatusMore();
+    this.loadDeviceDepartmentMore();
   }
 
   // 获取当前页面的数据
@@ -244,10 +254,10 @@ export class DeviceManageComponent implements OnInit {
       // 获取表单中的数据
       const deviceFormData: FormData = new FormData();
       for (const key in this.deviceInfoForm.value) {
+        // 获取所有传入的数据
         if (this.deviceInfoForm.value[key] !== undefined) {
-          console.log('Key = ' + key + ' Value = ' + this.deviceInfoForm.value[key]);
           if (key === 'create_time') {
-            // console.log('Get Date = ' + moment(this.deviceInfoForm.value[key].toString()).format("YYYY-MM-DD HH:mm:ss"));
+            deviceFormData.append(key, moment(this.deviceInfoForm.value[key]).format('YYYY-MM-DD HH:mm:ss'));
           } else {
             deviceFormData.append(key, this.deviceInfoForm.value[key]);
           }
@@ -260,19 +270,34 @@ export class DeviceManageComponent implements OnInit {
         this.isWriteStatus = false;
         console.log('===Create Device===');
         this.isCreateStatus = false;
-        console.log(deviceFormData);
 
-        // this.deviceService.createDevice(deviceFormData).subscribe(
-        //   data => {
-        //     console.log(data);
-        //   },
-        //   error => {
-        //     console.log(error);
-        //   },
-        //   () => {
-        //     console.log('===createDevice===');
-        //   }
-        // );
+        this.deviceService.createDevice(deviceFormData).subscribe(
+          data => {
+            console.log(data);
+            if (data.code === 0) {
+              this.message.create('success', '创建成功');
+              const newDeivce: DeviceEntity = new DeviceEntity();
+              // 把Object对象转化为自定义对象
+              Object.assign(newDeivce, data.data);
+
+              this.isDeviceInfoDialogVisible = false;
+              this.isWriteStatus = false;
+              this.isCreateStatus = false;
+
+              // 重新载入新数据
+              this.handleUpdateRawData();
+            } else {
+              this.message.create('error', '创建失败:' + data.msg);
+            }
+          },
+          error => {
+            console.log(error);
+          },
+          () => {
+            console.log('===createDevice===');
+            this.isOkLoading = false;
+          }
+        );
       }
 
       // 更新信息
@@ -281,7 +306,6 @@ export class DeviceManageComponent implements OnInit {
         // 向服务器更新
         this.deviceService.modifyDeviceInfo(deviceFormData).subscribe(
           data => {
-            console.log(data);
             if (data.code === 0) {
               // 更新数据表中的数据显示
               for (const key in this.deviceInfoForm.value) {
@@ -370,6 +394,56 @@ export class DeviceManageComponent implements OnInit {
       },
       () => {
         console.log('Get All Device Status Complete');
+      }
+    );
+  }
+
+  // 载入更多的设备部门
+  public loadDeviceDepartmentMore(): void {
+    this.isDepartmentLoading = true;
+    this.departmentService.getAllDepartment().subscribe(
+      data => {
+        if (data.code === 0) {
+          const departmentData = Object.values(data.data);
+          this.isDepartmentLoading = false;
+          this.deviceDepartmentList = departmentData.slice(0, departmentData.length);
+        }
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        console.log('Get All Department Complete');
+      }
+    );
+  }
+
+  // 部门选择时的响应事件
+  public deviceDepartmentChange(index: number): void {
+    // 载入更多用户
+    this.loadDeviceUserMore(index);
+  }
+
+  // 载入更多部门对应的用户
+  public loadDeviceUserMore(index: number): void {
+    if (index === undefined) {
+      return;
+    }
+
+    this.isUserLoading = true;
+    this.userService.getUserListByDepartmentId(index).subscribe(
+      data => {
+        if (data.code === 0) {
+          const userData = Object.values(data.data);
+          this.isUserLoading = false;
+          this.deviceUserList = userData.slice(0, userData.length);
+        }
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        console.log('Get User List By Department Id Complete');
       }
     );
   }
