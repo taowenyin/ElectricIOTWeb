@@ -421,6 +421,10 @@ export class DeviceManageComponent implements OnInit {
   // 部门选择时的响应事件
   public deviceDepartmentChange(index: number): void {
     // 载入更多用户
+    if (index === undefined || index === null) {
+      return;
+    }
+
     this.loadDeviceUserMore(index);
   }
 
