@@ -255,7 +255,7 @@ export class DeviceManageComponent implements OnInit {
       const deviceFormData: FormData = new FormData();
       for (const key in this.deviceInfoForm.value) {
         // 获取所有传入的数据
-        if (this.deviceInfoForm.value[key] !== undefined) {
+        if (this.deviceInfoForm.value[key] !== undefined && this.deviceInfoForm.value[key] !== null) {
           if (key === 'create_time') {
             deviceFormData.append(key, moment(this.deviceInfoForm.value[key]).format('YYYY-MM-DD HH:mm:ss'));
           } else {

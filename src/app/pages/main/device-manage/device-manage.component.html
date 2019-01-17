@@ -34,14 +34,14 @@
     <tbody>
       <tr *ngFor="let data of deviceTable.data; let i = index">
         <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus()"></td>
-        <td>{{data.uid}}</td>
-        <td>{{data.imsi}}</td>
-        <td>{{data.name}}</td>
-        <td>{{data.serial_number}}</td>
-        <td>{{data.type}}</td>
-        <td>{{data.status}}</td>
-        <td>{{data.user}}</td>
-        <td>{{data.department}}</td>
+        <td>{{data.uid ? data.uid : '未初始化'}}</td>
+        <td>{{data.imsi ? data.imsi : '未初始化'}}</td>
+        <td>{{data.name ? data.imsi : '未初始化'}}</td>
+        <td>{{data.serial_number ? data.serial_number : '未初始化'}}</td>
+        <td>{{data.type ? data.type : '未初始化'}}</td>
+        <td>{{data.status ? data.status : '未初始化'}}</td>
+        <td>{{data.user ? data.user : '未初始化'}}</td>
+        <td>{{data.department ? data.department : '未初始化'}}</td>
         <td><button nz-button nzType="primary" (click)="handleShow(i)"><span>详情</span></button></td>
       </tr>
     </tbody>
@@ -108,7 +108,7 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="department_id">部门</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-select formControlName="department_id" name="department_id" id="department_id" (ngModelChange)="deviceDepartmentChange($event)" (nzScrollToBottom)="loadDeviceDepartmentMore()" nzPlaceHolder="所属部门" nzAllowClear>
+        <nz-select formControlName="department_id" name="department_id" id="department_id" (ngModelChange)="deviceDepartmentChange($event)" (nzScrollToBottom)="loadDeviceDepartmentMore()" nzPlaceHolder="选择部门" nzAllowClear>
           <nz-option *ngFor="let departmentItem of deviceDepartmentList" [nzValue]="departmentItem.id" [nzLabel]="departmentItem.name"></nz-option>
           <nz-option *ngIf="isDepartmentLoading" nzDisabled nzCustomContent>
             <i nz-icon type="loading" theme="outline"></i> 载入数据中...
@@ -117,7 +117,7 @@
       </nz-form-control>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="user_id">保管</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-select formControlName="user_id" name="user_id" id="user_id" (nzScrollToBottom)="loadDeviceUserMore(deviceInfoForm.get('department_id').value)" nzPlaceHolder="保管员" nzAllowClear>
+        <nz-select formControlName="user_id" name="user_id" id="user_id" (nzScrollToBottom)="loadDeviceUserMore(deviceInfoForm.get('department_id').value)" nzPlaceHolder="选择保管员" nzAllowClear>
           <nz-option *ngFor="let userItem of deviceUserList" [nzValue]="userItem.user_id" [nzLabel]="userItem.user_name"></nz-option>
           <nz-option *ngIf="isUserLoading" nzDisabled nzCustomContent>
             <i nz-icon type="loading" theme="outline"></i> 载入数据中...
