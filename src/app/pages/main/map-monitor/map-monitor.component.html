@@ -1,3 +1,27 @@
 <div id="map-container">
-
+  <div id="map-operate">
+    <form nz-form [nzLayout]="inline">
+      <nz-form-item>
+        <nz-form-control>
+          <label nz-checkbox formcontrolname="real_time_position">
+            <span>实时位置</span>
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+  <nz-layout id="map-content">
+    <nz-sider id="map-device-list" [nzWidth]="200">
+      <nz-tree
+        #deviceTypeTree
+        [nzData]="devicesTreeData"
+        [nzCheckable]="true"
+        [nzMultiple]="false"
+        (nzClick)="treeNodeClick($event)"
+        (nzExpandChange)="treeNodeExpand($event)"
+        (nzSelectedKeysChange)="treeNodeSelect($event)"
+        (nzCheckBoxChange)="treeNodeCheck($event)"></nz-tree>
+    </nz-sider>
+    <nz-content id="map-bd"></nz-content>
+  </nz-layout>
 </div>
