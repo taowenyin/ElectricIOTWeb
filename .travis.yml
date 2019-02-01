@@ -22,5 +22,5 @@ deploy:
     tags: true
     all_branches: true
     repo: taowenyin/ElectricIOTWeb
-after_deploy:
-- fis3 release
+#after_deploy:
+#- fis3 release
