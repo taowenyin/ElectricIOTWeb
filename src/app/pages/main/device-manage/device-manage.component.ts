@@ -234,7 +234,14 @@ export class DeviceManageComponent implements OnInit {
 
   // 显示设备详细信息对话框
   public handleShow(index: number): void {
-    this.currentSelectDeviceData = this.dataSet[index];
+    console.log(this.dataSet);
+    for (const indexData in this.dataSet) {
+      if (this.dataSet[indexData].id === index) {
+        this.currentSelectDeviceData = this.dataSet[indexData];
+        break;
+      }
+    }
+    // this.currentSelectDeviceData = this.dataSet[index];
     // 表单载入数据
     this.loadDeviceFormData(this.currentSelectDeviceData);
 

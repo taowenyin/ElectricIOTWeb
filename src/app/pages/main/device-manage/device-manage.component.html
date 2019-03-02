@@ -42,7 +42,7 @@
         <td>{{data.status ? data.status : '未初始化'}}</td>
         <td>{{data.user ? data.user : '未初始化'}}</td>
         <td>{{data.department ? data.department : '未初始化'}}</td>
-        <td><button nz-button nzType="primary" (click)="handleShow(i)"><span>详情</span></button></td>
+        <td><button nz-button nzType="primary" (click)="handleShow(data.id)"><span>详情</span></button></td>
       </tr>
     </tbody>
   </nz-table>
