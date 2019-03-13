@@ -138,17 +138,17 @@
       </nz-form-control>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="keep_live_interval">心跳</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-input-number formControlName="keep_live_interval" [nzMin]="1" [nzMax]="255" [nzStep]="1" [nzPlaceHolder]="'设备心跳间隔'"></nz-input-number>
+        <nz-input-number formControlName="keep_live_interval" [nzMin]="1" [nzMax]="6500" [nzStep]="1" [nzPlaceHolder]="'设备心跳间隔'"></nz-input-number>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="battery_sleep_time">休眠</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-input-number formControlName="battery_sleep_time" [nzMin]="1" [nzMax]="255" [nzStep]="1" [nzPlaceHolder]="'电源供电的休眠时间'"></nz-input-number>
+        <nz-input-number formControlName="battery_sleep_time" [nzMin]="1" [nzMax]="6500" [nzStep]="1" [nzPlaceHolder]="'电源供电的休眠时间'"></nz-input-number>
       </nz-form-control>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="battery_keep_live_time">连接</nz-form-label>
       <nz-form-control [nzSpan]="8">
-        <nz-input-number formControlName="battery_keep_live_time" [nzMin]="1" [nzMax]="255" [nzStep]="1" [nzPlaceHolder]="'保持连接的时间'"></nz-input-number>
+        <nz-input-number formControlName="battery_keep_live_time" [nzMin]="1" [nzMax]="6500" [nzStep]="1" [nzPlaceHolder]="'保持连接的时间'"></nz-input-number>
       </nz-form-control>
     </nz-form-item>
   </form>
