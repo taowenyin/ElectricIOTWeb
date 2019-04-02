@@ -1,4 +1,4 @@
-export const SERVER_URL = 'http://192.168.247.130:8080/ElectricIOTServer/api/';
+export const SERVER_URL = 'http://192.168.0.7:8080/ElectricIOTServer/api/';
 
 // 用户登录接口
 export const API_LOGIN = SERVER_URL + 'login/';
