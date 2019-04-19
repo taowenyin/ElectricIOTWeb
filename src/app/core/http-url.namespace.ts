@@ -1,3 +1,4 @@
+// 阿里服务接口
 export const SERVER_URL = 'http://172.81.239.174:8080/ElectricIOTServer/api/';
 
 // 用户登录接口
