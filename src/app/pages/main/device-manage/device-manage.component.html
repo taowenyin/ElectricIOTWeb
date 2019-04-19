@@ -48,7 +48,7 @@
   </nz-table>
 </div>
 
-<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isDeviceInfoDialogVisible" nzTitle="设备信息" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
+<nz-modal nzWidth="620" nzWrapClassName="vertical-center-modal" [(nzVisible)]="isDeviceInfoDialogVisible" nzTitle="设备信息" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
   <form nz-form [formGroup]="deviceInfoForm">
     <nz-form-item hidden>
       <nz-form-label [nzSpan]="4" nzRequired nzFor="id">ID</nz-form-label>
@@ -149,6 +149,38 @@
       <nz-form-label [nzSpan]="4" nzRequired nzFor="battery_keep_live_time">连接</nz-form-label>
       <nz-form-control [nzSpan]="8">
         <nz-input-number formControlName="battery_keep_live_time" [nzMin]="1" [nzMax]="6500" [nzStep]="1" [nzPlaceHolder]="'保持连接的时间'"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="4" nzRequired>IP</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <div nz-col [nzSpan]="4">
+          <nz-input-number class="ip-content" formControlName="ip_one" [nzMin]="1" [nzMax]="255" [nzStep]="1" id="ip_one" [nzPlaceHolder]="'0~255'"></nz-input-number>
+        </div>
+        <div nz-col [nzSpan]="1">
+          <input nz-input class="ip-division" disabled placeholder=".">
+        </div>
+        <div nz-col [nzSpan]="4">
+          <nz-input-number class="ip-content" formControlName="ip_two" [nzMin]="1" [nzMax]="255" [nzStep]="1" id="ip_two" [nzPlaceHolder]="'0~255'"></nz-input-number>
+        </div>
+        <div nz-col [nzSpan]="1">
+          <input nz-input class="ip-division" disabled placeholder=".">
+        </div>
+        <div nz-col [nzSpan]="4">
+          <nz-input-number class="ip-content" formControlName="ip_three" [nzMin]="1" [nzMax]="255" [nzStep]="1" id="ip_three" [nzPlaceHolder]="'0~255'"></nz-input-number>
+        </div>
+        <div nz-col [nzSpan]="1">
+          <input nz-input class="ip-division" disabled placeholder=".">
+        </div>
+        <div nz-col [nzSpan]="4">
+          <nz-input-number class="ip-content" formControlName="ip_four" [nzMin]="1" [nzMax]="255" [nzStep]="1" id="ip_four" [nzPlaceHolder]="'0~255'"></nz-input-number>
+        </div>
+        <div nz-col [nzSpan]="1">
+          <input nz-input class="ip-division" disabled placeholder=":">
+        </div>
+        <div nz-col [nzSpan]="4">
+          <nz-input-number class="ip-content" formControlName="ip_port" id="ip_port" [nzPlaceHolder]="'端口号'"></nz-input-number>
+        </div>
       </nz-form-control>
     </nz-form-item>
   </form>

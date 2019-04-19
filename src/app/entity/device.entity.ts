@@ -20,6 +20,7 @@ export class DeviceEntity {
   battery_keep_live_time = 300;
   checked: boolean;
   disable: boolean;
+  server_ip: string;
 
   public clear(): void {
     this.id = 0;
@@ -43,5 +44,6 @@ export class DeviceEntity {
     this.battery_keep_live_time = 300;
     this.checked = false;
     this.disable = false;
+    this.server_ip = '172.81.239.174:65001';
   }
 }
