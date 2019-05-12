@@ -22,8 +22,8 @@ export class MapMonitorComponent implements OnInit {
 
   ngOnInit() {
     const electricMap = new BMap.Map('map-bd');
-    const centerPoint = new BMap.Point(116.404, 39.915);
-    electricMap.centerAndZoom(centerPoint, 15);
+    const centerPoint = new BMap.Point(120.681996, 31.220925);
+    electricMap.centerAndZoom(centerPoint, 19);
     electricMap.enableScrollWheelZoom(true);
 
     this.loadTypeClassifyDevices();
