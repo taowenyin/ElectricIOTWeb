@@ -148,6 +148,11 @@ export class DeviceManageComponent implements OnInit {
       keep_live_interval: [''],
       battery_sleep_time: [''],
       battery_keep_live_time: [''],
+      ip_one: ['', [Validators.required]],
+      ip_two: ['', [Validators.required]],
+      ip_three: ['', [Validators.required]],
+      ip_four: ['', [Validators.required]],
+      ip_port: ['', [Validators.required]],
     });
 
     this.loadAllDevices();
@@ -260,11 +265,23 @@ export class DeviceManageComponent implements OnInit {
 
       // 获取表单中的数据
       const deviceFormData: FormData = new FormData();
+      let serverIp = '';
       for (const key in this.deviceInfoForm.value) {
         // 获取所有传入的数据
         if (this.deviceInfoForm.value[key] !== undefined && this.deviceInfoForm.value[key] !== null) {
           if (key === 'create_time') {
             deviceFormData.append(key, moment(this.deviceInfoForm.value[key]).format('YYYY-MM-DD HH:mm:ss'));
+          } else if (key === 'ip_one') {
+            serverIp += (this.deviceInfoForm.value['ip_one'] + '.');
+          } else if (key === 'ip_two') {
+            serverIp += (this.deviceInfoForm.value['ip_two'] + '.');
+          } else if (key === 'ip_three') {
+            serverIp += (this.deviceInfoForm.value['ip_three'] + '.');
+          } else if (key === 'ip_four') {
+            serverIp += (this.deviceInfoForm.value['ip_four'] + ':');
+          } else if (key === 'ip_port') {
+            serverIp += this.deviceInfoForm.value['ip_port'];
+            deviceFormData.append('server_ip', serverIp);
           } else {
             deviceFormData.append(key, this.deviceInfoForm.value[key]);
           }
@@ -306,7 +323,6 @@ export class DeviceManageComponent implements OnInit {
           }
         );
       }
-
       // 更新信息
       if (this.isWriteStatus) {
         console.log('===Write Device===');
@@ -512,6 +528,13 @@ export class DeviceManageComponent implements OnInit {
     this.deviceInfoForm.get('keep_live_interval').setValue(data['keep_live_interval']);
     this.deviceInfoForm.get('battery_sleep_time').setValue(data['battery_sleep_time']);
     this.deviceInfoForm.get('battery_keep_live_time').setValue(data['battery_keep_live_time']);
+    const serverPort = (data['server_ip'].split(':'))[1];
+    const serverIp = ((data['server_ip'].split(':'))[0]).split('.');
+    this.deviceInfoForm.get('ip_one').setValue(serverIp[0]);
+    this.deviceInfoForm.get('ip_two').setValue(serverIp[1]);
+    this.deviceInfoForm.get('ip_three').setValue(serverIp[2]);
+    this.deviceInfoForm.get('ip_four').setValue(serverIp[3]);
+    this.deviceInfoForm.get('ip_port').setValue(serverPort);
   }
 
   private search(): void {
