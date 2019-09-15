@@ -47,10 +47,6 @@ export class DeviceService {
     return this.http.post<ReponseEntity>(API_DEVICE_COMMAND, commandData);
   }
 
-  public readDataCommand(commandData: FormData): Observable<ReponseEntity> {
-    return this.http.post<ReponseEntity>(API_DEVICE_COMMAND, commandData);
-  }
-
   public readDataCommand(id: number): Observable<ReponseEntity> {
     return this.http.get<ReponseEntity>(API_DEVICE_READ_DATA(id));
   }
