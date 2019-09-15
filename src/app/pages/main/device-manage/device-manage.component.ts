@@ -331,7 +331,7 @@ export class DeviceManageComponent implements OnInit {
           data => {
             if (data.code === 0) {
               // 更新数据表中的数据显示
-              for (const key in this.deviceInfoForm.value) {
+              for (const key of this.deviceInfoForm.value) {
                 this.currentSelectDeviceData[key] = this.deviceInfoForm.value[key];
               }
               this.message.create('success', '修改成功');
