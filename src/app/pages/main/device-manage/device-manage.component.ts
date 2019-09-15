@@ -92,6 +92,8 @@ export class DeviceManageComponent implements OnInit {
 
   // 设备详细信息对话框显示状态位
   public isDeviceInfoDialogVisible = false;
+  // 设备控制对话框显示状态位
+  public isDeviceControllerDialogVisible = false;
   // 设备详细信息是否载入完成
   public isOkLoading = false;
 
@@ -122,6 +124,15 @@ export class DeviceManageComponent implements OnInit {
 
   // 当前选中设备的数据
   public currentSelectDeviceData: DeviceEntity = new DeviceEntity();
+
+  // 连接设备的进度条
+  public isLoadingConnect = false;
+
+  // 全局定时器ID
+  private intervalId = 0;
+
+  // 当前发送的指令
+  private currentCommand = '';
 
   constructor(
     private deviceService: DeviceService,
@@ -379,6 +390,85 @@ export class DeviceManageComponent implements OnInit {
     this.isCreateStatus = false;
     // 关闭按钮载入状态
     this.isOkLoading = false;
+  }
+
+  // 显示控制对话框
+  public controllerShow(index: number): void {
+    console.log(this.dataSet);
+
+    for (const indexData in this.dataSet) {
+      if (this.dataSet[indexData].id === index) {
+        this.currentSelectDeviceData = this.dataSet[indexData];
+        break;
+      }
+    }
+
+    // 显示窗口就开始读取数据
+    this.intervalId = setInterval(() => {
+      this.deviceService.readDataCommand(this.currentSelectDeviceData.id).subscribe(
+        data => {
+          console.log(data);
+          if (data.code === 0) {
+            if (DeviceService.COMMAND_CONNECT_DEVICE === this.currentCommand) {
+              // 设备连接成功
+              if (DeviceService.COMMAND_CONNECT_DEVICE_FEEDBACK === data.data[0].receiveData) {
+                this.isLoadingConnect = false;
+              }
+            }
+          } else {
+            console.log(data);
+          }
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+          console.log('===createCommand===');
+        }
+      );
+    }, 3000);
+
+    this.isDeviceControllerDialogVisible = true;
+  }
+
+  // 关闭控制对话框
+  public controllerCancel(): void {
+    this.isDeviceControllerDialogVisible = false;
+    this.isLoadingConnect = false;
+
+    // 清空定时器
+    clearInterval(this.intervalId);
+    this.intervalId = 0;
+  }
+
+  // 连接设备
+  public connectDevice(): void {
+    // 显示进度条
+    this.isLoadingConnect = true;
+
+    // 获取表单中的数据
+    const commandData: FormData = new FormData();
+    commandData.append('id', String(this.currentSelectDeviceData.id));
+    commandData.append('command', DeviceService.COMMAND_CONNECT_DEVICE);
+
+    this.currentCommand = DeviceService.COMMAND_CONNECT_DEVICE;
+
+    this.deviceService.createCommand(commandData).subscribe(
+      data => {
+        console.log(data);
+        if (data.code === 0) {
+          this.message.create('success', '创建指令成功');
+        } else {
+          this.message.create('error', '创建指令失败:' + data.msg);
+        }
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        console.log('===createCommand===');
+      }
+    );
   }
 
   // 载入更多的设备类型
