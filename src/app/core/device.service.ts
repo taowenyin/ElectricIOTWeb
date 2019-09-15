@@ -12,8 +12,8 @@ import {
 })
 export class DeviceService {
 
-  public static COMMAND_CONNECT_DEVICE: String = 'I00i';
-  public static COMMAND_CONNECT_DEVICE_FEEDBACK: String = 'I00i';
+  public static COMMAND_CONNECT_DEVICE = 'I00i';
+  public static COMMAND_CONNECT_DEVICE_FEEDBACK = 'I00i';
 
   constructor(
     private http: HttpClient
