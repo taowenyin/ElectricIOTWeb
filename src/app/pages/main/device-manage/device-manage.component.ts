@@ -125,8 +125,19 @@ export class DeviceManageComponent implements OnInit {
   // 当前选中设备的数据
   public currentSelectDeviceData: DeviceEntity = new DeviceEntity();
 
+  // 连接设备的图标
+  public connectIcon = 'poweroff';
+  public connectText = '连接设备';
   // 连接设备的进度条
   public isLoadingConnect = false;
+  // 读取电压的进度条
+  public isLoadingVoltage = false;
+  // 第一节分压器的值
+  public firstVoltage = 0;
+  // 第二节分压器的值
+  public secondVoltage = 0;
+  // 第三节分压器的值
+  public thirdVoltage = 0;
 
   // 全局定时器ID
   private intervalId = 0;
@@ -413,7 +424,28 @@ export class DeviceManageComponent implements OnInit {
               // 设备连接成功
               if (DeviceService.COMMAND_CONNECT_DEVICE_FEEDBACK === data.data[0].receiveData) {
                 this.isLoadingConnect = false;
+                this.connectIcon = 'api';
+                this.connectText = '设备已连接';
               }
+            }
+            if (DeviceService.COMMAND_READ_VOLTAGE === this.currentCommand) {
+              const voltage = data.data[0].receiveData;
+              console.log('xxxx' + voltage);
+              if (voltage.length === 6) {
+                this.firstVoltage = parseInt(voltage.slice(2, 5), 10);
+                this.secondVoltage = 0;
+                this.thirdVoltage = 0;
+              } else if (voltage.length === 10) {
+                this.firstVoltage = parseInt(voltage.slice(2, 5), 10);
+                this.secondVoltage = parseInt(voltage.slice(6, 9), 10);
+                this.thirdVoltage = 0;
+              } else {
+                this.firstVoltage = parseInt(voltage.slice(2, 5), 10);
+                this.secondVoltage = parseInt(voltage.slice(6, 9), 10);
+                this.thirdVoltage = parseInt(voltage.slice(10, 13), 10);
+              }
+
+              this.isLoadingVoltage = false;
             }
           } else {
             console.log(data);
@@ -435,6 +467,8 @@ export class DeviceManageComponent implements OnInit {
   public controllerCancel(): void {
     this.isDeviceControllerDialogVisible = false;
     this.isLoadingConnect = false;
+    this.connectIcon = 'poweroff';
+    this.connectText = '连接设备';
 
     // 清空定时器
     clearInterval(this.intervalId);
@@ -452,6 +486,36 @@ export class DeviceManageComponent implements OnInit {
     commandData.append('command', DeviceService.COMMAND_CONNECT_DEVICE);
 
     this.currentCommand = DeviceService.COMMAND_CONNECT_DEVICE;
+
+    this.deviceService.createCommand(commandData).subscribe(
+      data => {
+        console.log(data);
+        if (data.code === 0) {
+          this.message.create('success', '创建指令成功');
+        } else {
+          this.message.create('error', '创建指令失败:' + data.msg);
+        }
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        console.log('===createCommand===');
+      }
+    );
+  }
+
+  // 发送读取电压指令
+  public readVoltage(): void {
+    // 显示进度条
+    this.isLoadingVoltage = true;
+
+    // 获取表单中的数据
+    const commandData: FormData = new FormData();
+    commandData.append('id', String(this.currentSelectDeviceData.id));
+    commandData.append('command', DeviceService.COMMAND_READ_VOLTAGE);
+
+    this.currentCommand = DeviceService.COMMAND_READ_VOLTAGE;
 
     this.deviceService.createCommand(commandData).subscribe(
       data => {

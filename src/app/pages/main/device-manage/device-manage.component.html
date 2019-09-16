@@ -194,12 +194,41 @@
   </ng-template>
 </nz-modal>
 
-<nz-modal nzWidth="620" nzWrapClassName="vertical-center-modal" [(nzVisible)]="isDeviceControllerDialogVisible" nzTitle="设备控制" [nzFooter]="controllerFooter" (nzOnCancel)="controllerCancel()">
-  <div nz-row>
+<nz-modal class="controller-panel" nzWidth="620" nzWrapClassName="vertical-center-modal" [(nzVisible)]="isDeviceControllerDialogVisible" nzTitle="设备控制" [nzFooter]="controllerFooter" (nzOnCancel)="controllerCancel()">
+  <div nz-row class="controller-panel-item">
     <div nz-col [nzSpan]='24'>
       <button nz-button nzType="primary" (click)="connectDevice()" [nzLoading]="isLoadingConnect">
-        <i nz-icon type="api" theme="outline"></i>启动设备
+        <i nz-icon [type]='connectIcon' theme="outline"></i>{{connectText}}
       </button>
+    </div>
+  </div>
+
+  <nz-divider nzText="读取分压器数据"></nz-divider>
+  <div nz-row class="controller-panel-item" nzType="flex" nzJustify="space-around" nzAlign="middle">
+    <div nz-col [nzSpan]='6'>
+      <div class="height-100">
+        <label for="firstVoltage">分压器1:</label>
+        <input nz-input id='firstVoltage'  [(ngModel)]='firstVoltage' />
+      </div>
+    </div>
+    <div nz-col [nzSpan]='6'>
+      <div class="height-100">
+        <label for="secondVoltage">分压器2:</label>
+        <input nz-input id='secondVoltage'  [(ngModel)]='secondVoltage' />
+      </div>
+    </div>
+    <div nz-col [nzSpan]='6'>
+      <div class="height-100">
+        <label for="thirdVoltage">分压器3:</label>
+        <input nz-input id='thirdVoltage'  [(ngModel)]='thirdVoltage' />
+      </div>
+    </div>
+    <div nz-col [nzSpan]='6'>
+      <div class="height-100">
+        <button nz-button nzType="primary" (click)="readVoltage()" [nzLoading]="isLoadingVoltage">
+          <i nz-icon type="cloud-download" theme="outline"></i>读取电压
+        </button>
+      </div>
     </div>
   </div>
 

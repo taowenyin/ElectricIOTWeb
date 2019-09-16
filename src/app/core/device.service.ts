@@ -12,8 +12,12 @@ import {
 })
 export class DeviceService {
 
+  // 连接设备指令
   public static COMMAND_CONNECT_DEVICE = 'I00i';
+  // 连接设备指令的反馈
   public static COMMAND_CONNECT_DEVICE_FEEDBACK = 'I00i';
+  // 读取电压指令
+  public static COMMAND_READ_VOLTAGE = 'B00b';
 
   constructor(
     private http: HttpClient
