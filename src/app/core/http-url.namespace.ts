@@ -23,3 +23,11 @@ export const API_GET_ALL_DEVICE_TYPE = SERVER_URL + 'manage/type';
 // 获取所有设备状态接口
 export const API_GET_ALL_DEVICE_STATUS = SERVER_URL + 'manage/status';
 
+// 创建指令
+export const API_DEVICE_COMMAND = SERVER_URL + 'manage/device/command';
+
+// 获取设备数据
+export function  API_DEVICE_READ_DATA(id: number): string {
+  return SERVER_URL + 'manage/device/command/' + id;
+}
+

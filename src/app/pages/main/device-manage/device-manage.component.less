@@ -32,13 +32,32 @@
 
 nz-table {
   // 把最后一个单元格内容设为居中
-  tr > th:last-child, tr > td:last-child {
-    text-align: center;
-  }
+  //tr > th:last-child, tr > td:last-child {
+  //  text-align: center;
+  //}
 }
 
 nz-input-number {
   width: auto;
+}
+
+.controller-panel {
+  .controller-panel-item {
+    margin-bottom: 20px;
+
+    label {
+      margin-right: 8px;
+    }
+
+    .ant-input {
+      width: 70px;
+      margin-right: 10px;
+    }
+  }
+
+  .controller-panel-item:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .ip-division {
