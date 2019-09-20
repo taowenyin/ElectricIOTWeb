@@ -422,7 +422,8 @@ export class DeviceManageComponent implements OnInit {
           if (data.code === 0) {
             if (DeviceService.COMMAND_CONNECT_DEVICE === this.currentCommand) {
               // 设备连接成功
-              if (DeviceService.COMMAND_CONNECT_DEVICE_FEEDBACK === data.data[0].receiveData) {
+              if (DeviceService.COMMAND_CONNECT_DEVICE_FEEDBACK_1 === data.data[0].receiveData ||
+                DeviceService.COMMAND_CONNECT_DEVICE_FEEDBACK_2 === data.data[0].receiveData) {
                 this.isLoadingConnect = false;
                 this.connectIcon = 'api';
                 this.connectText = '设备已连接';

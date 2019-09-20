@@ -15,7 +15,8 @@ export class DeviceService {
   // 连接设备指令
   public static COMMAND_CONNECT_DEVICE = 'I00i';
   // 连接设备指令的反馈
-  public static COMMAND_CONNECT_DEVICE_FEEDBACK = 'I00i';
+  public static COMMAND_CONNECT_DEVICE_FEEDBACK_1 = 'I00i';
+  public static COMMAND_CONNECT_DEVICE_FEEDBACK_2 = 'I00iI00i';
   // 读取电压指令
   public static COMMAND_READ_VOLTAGE = 'B00b';
 
